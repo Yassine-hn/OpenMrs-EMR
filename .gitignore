@@ -1,0 +1,14 @@
+# Secrets - copy .env.example to .env and fill it in; never commit .env
+.env
+
+# Local backups (database dumps, config copies) - may contain patient data
+backups/
+
+# Personal working log - local only
+WORK-LOG.md
+
+# Editor / OS noise
+.idea/
+.vscode/
+*.swp
+.DS_Store

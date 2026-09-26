@@ -1,0 +1,82 @@
+# OpenMRS O3 Reference Application - based on upstream docker-compose.yml at tag 3.7.1
+# https://github.com/openmrs/openmrs-distro-referenceapplication/blob/3.7.1/docker-compose.yml
+#
+# Differences from upstream (keep this list current; everything else is upstream as-is):
+#   - project name fixed to "openmrs-emr" (container/volume names never collide with other stacks)
+#   - image tag pinned via OPENMRS_TAG (upstream defaults to the moving "qa" tag)
+#   - credentials required from .env, no fallback passwords
+#   - host port configurable via HTTP_PORT
+#   - db healthcheck reads credentials inside the container instead of interpolating them
+#   - backend waits for db to be healthy, not just started
+#
+# Usage: cp .env.example .env  (fill it in), then  docker compose up -d
+# UI: http://localhost/openmrs/spa    Legacy admin UI: http://localhost/openmrs
+
+name: openmrs-emr
+
+services:
+  gateway:
+    image: openmrs/openmrs-reference-application-3-gateway:${OPENMRS_TAG:?set OPENMRS_TAG in .env}
+    restart: "unless-stopped"
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "${HTTP_PORT:-80}:80"
+
+  frontend:
+    image: openmrs/openmrs-reference-application-3-frontend:${OPENMRS_TAG:?set OPENMRS_TAG in .env}
+    restart: "unless-stopped"
+    environment:
+      SPA_PATH: /openmrs/spa
+      API_URL: /openmrs
+      SPA_CONFIG_URLS: /openmrs/spa/config-core_demo.json
+      SPA_DEFAULT_LOCALE:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      timeout: 5s
+    depends_on:
+      - backend
+
+  backend:
+    image: openmrs/openmrs-reference-application-3-backend:${OPENMRS_TAG:?set OPENMRS_TAG in .env}
+    restart: "unless-stopped"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      OMRS_CONFIG_MODULE_WEB_ADMIN: "true"
+      OMRS_CONFIG_AUTO_UPDATE_DATABASE: "true"
+      OMRS_CONFIG_CREATE_TABLES: "true"
+      OMRS_CONFIG_CONNECTION_SERVER: db
+      OMRS_CONFIG_CONNECTION_DATABASE: openmrs
+      OMRS_CONFIG_CONNECTION_USERNAME: ${OMRS_DB_USER:?set OMRS_DB_USER in .env}
+      OMRS_CONFIG_CONNECTION_PASSWORD: ${OMRS_DB_PASSWORD:?set OMRS_DB_PASSWORD in .env}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/openmrs"]
+      timeout: 5s
+    volumes:
+      - openmrs-data:/openmrs/data
+
+  # MariaDB - the database the O3 distribution is built and tested against
+  db:
+    image: mariadb:10.11.7
+    restart: "unless-stopped"
+    command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci"
+    healthcheck:
+      # $$ = evaluated inside the container, so the password is not written into the compose config
+      test: "mysql --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --execute \"SHOW DATABASES;\""
+      interval: 3s
+      timeout: 1s
+      retries: 5
+    environment:
+      MYSQL_DATABASE: openmrs
+      MYSQL_USER: ${OMRS_DB_USER:?set OMRS_DB_USER in .env}
+      MYSQL_PASSWORD: ${OMRS_DB_PASSWORD:?set OMRS_DB_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in .env}
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  openmrs-data: ~
+  db-data: ~
