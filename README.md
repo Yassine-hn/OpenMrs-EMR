@@ -164,8 +164,9 @@ A complete backup needs **both** volumes:
 
 - the **database** (`db-data`), which holds all clinical data, and
 - the **OpenMRS data directory** (`openmrs-data`). It contains `openmrs-runtime.properties`
-  with the **encryption key** for encrypted fields, plus attachments (`complex_obs/`) and
-  search indexes. **A database restored without its matching encryption key cannot decrypt
+  with the **encryption key** for encrypted fields, **uploaded files** (patient photos and
+  attachments, under `storage/complex_obs/`; core 2.8 no longer uses the top-level
+  `complex_obs/`, which stays empty), and search indexes. **A database restored without its matching encryption key cannot decrypt
   those fields.**
 
 `backups/` is git-ignored because dumps contain patient data. **Never commit it.**
