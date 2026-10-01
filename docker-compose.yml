@@ -3,7 +3,10 @@
 #
 # Differences from upstream (keep this list current; everything else is upstream as-is):
 #   - project name fixed to "openmrs-emr" (container/volume names never collide with other stacks)
-#   - image tag pinned via OPENMRS_TAG (upstream defaults to the moving "qa" tag)
+#   - images pinned to release 3.7.1 BY DIGEST (upstream defaults to the moving "qa" tag).
+#     Format tag@sha256:... - Docker uses only the digest; the tag is there for humans.
+#     A digest identifies the exact image content and cannot change, unlike a tag.
+#     To upgrade, see README "Upgrading".
 #   - credentials required from .env, no fallback passwords
 #   - host port configurable via HTTP_PORT
 #   - db healthcheck reads credentials inside the container instead of interpolating them
@@ -16,7 +19,7 @@ name: openmrs-emr
 
 services:
   gateway:
-    image: openmrs/openmrs-reference-application-3-gateway:${OPENMRS_TAG:?set OPENMRS_TAG in .env}
+    image: openmrs/openmrs-reference-application-3-gateway:3.7.1@sha256:49070abbcda8aeced46f78ce0c1559236a2ba45bc624fe8485a59220cbd159a2
     restart: "unless-stopped"
     depends_on:
       - frontend
@@ -25,7 +28,7 @@ services:
       - "${HTTP_PORT:-80}:80"
 
   frontend:
-    image: openmrs/openmrs-reference-application-3-frontend:${OPENMRS_TAG:?set OPENMRS_TAG in .env}
+    image: openmrs/openmrs-reference-application-3-frontend:3.7.1@sha256:f6b1f8443ab27a6b1c3944c5a948f2e0cdfea3701dcfd59316677fef28a58f8d
     restart: "unless-stopped"
     environment:
       SPA_PATH: /openmrs/spa
@@ -39,7 +42,7 @@ services:
       - backend
 
   backend:
-    image: openmrs/openmrs-reference-application-3-backend:${OPENMRS_TAG:?set OPENMRS_TAG in .env}
+    image: openmrs/openmrs-reference-application-3-backend:3.7.1@sha256:929cfe5dca5f221460e0f4a57abb9294614df5f74fbb3bb865e01b8dfe7a985b
     restart: "unless-stopped"
     depends_on:
       db:
@@ -60,7 +63,7 @@ services:
 
   # MariaDB - the database the O3 distribution is built and tested against
   db:
-    image: mariadb:10.11.7
+    image: mariadb:10.11.7@sha256:27292753bb759cd22be72e3c8192f1259ef47010c8634b5da0bc886845efe9fd
     restart: "unless-stopped"
     command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci"
     healthcheck:

@@ -27,7 +27,7 @@ project, and never "upgrade" it.
 
 | Rule | Why |
 | --- | --- |
-| Pin image versions (`OPENMRS_TAG`, MariaDB tag). Never `latest`/`qa`/`nightly`. | Mutable tags change silently on `docker compose pull`. |
+| Pin every image by digest in `docker-compose.yml` (`tag@sha256:…`). When upgrading, change tag **and** digest. Never `latest`/`qa`/`nightly`. | Tags are mutable and change silently on `docker compose pull`; a digest cannot. |
 | Secrets live only in `.env` (git-ignored). No fallback passwords in `docker-compose.yml`. | The old project leaked working credentials through a public repo. |
 | Stay close to upstream `docker-compose.yml` (openmrs/openmrs-distro-referenceapplication). | Keeps upgrades a diff against upstream instead of an investigation. |
 | `docker compose down -v` **deletes the database**. Never run it without explicit approval and a fresh backup. | Named volumes hold all data. |

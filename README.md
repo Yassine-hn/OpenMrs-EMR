@@ -39,19 +39,26 @@ browser ──► gateway (nginx, host port 80)
                                           └──► db  (MariaDB, port 3306)
 ```
 
-| Service | Image | Holds data? |
+| Service | Image (pinned by digest) | Holds data? |
 | --- | --- | --- |
-| `gateway` | `openmrs/openmrs-reference-application-3-gateway:3.7.1` | no |
-| `frontend` | `openmrs/openmrs-reference-application-3-frontend:3.7.1` | no |
-| `backend` | `openmrs/openmrs-reference-application-3-backend:3.7.1` | **yes** — volume `openmrs-emr_openmrs-data` |
-| `db` | `mariadb:10.11.7` | **yes** — volume `openmrs-emr_db-data` |
+| `gateway` | `openmrs/openmrs-reference-application-3-gateway:3.7.1@sha256:49070abb…` | no |
+| `frontend` | `openmrs/openmrs-reference-application-3-frontend:3.7.1@sha256:f6b1f844…` | no |
+| `backend` | `openmrs/openmrs-reference-application-3-backend:3.7.1@sha256:929cfe5d…` | **yes** — volume `openmrs-emr_openmrs-data` |
+| `db` | `mariadb:10.11.7@sha256:27292753…` | **yes** — volume `openmrs-emr_db-data` |
+
+**Images are pinned by digest**, and the full digests are in `docker-compose.yml`. A tag
+such as `3.7.1` is a label the publisher can move to a different image. A digest
+(`sha256:…`) is a fingerprint of the image content, so it always means the same bytes.
+When both are given (`tag@sha256:…`), Docker uses only the digest; the tag is there for
+people reading the file. Each digest is a multi-architecture index, so the same pin works
+on amd64 and arm64 servers. They were checked against Docker Hub on 2026-09-27.
 
 The frontend is the O3 **micro-frontend** app: a set of React modules loaded into one page.
 The backend is classic OpenMRS (Java modules, REST and FHIR APIs). The old admin UI is still
 available at `/openmrs` for system administration.
 
 `docker-compose.yml` is upstream's file with a short, documented list of changes at its top
-(pinned versions, secrets from `.env`, fixed project name). Keep it close to upstream so
+(images pinned by digest, secrets from `.env`, fixed project name). Keep it close to upstream so
 upgrades stay a simple diff.
 
 ## Prerequisites
@@ -199,9 +206,28 @@ Test it before relying on it.
 2. Compare upstream's `docker-compose.yml` at the new tag with ours, and carry over any
    changes. The list of our intentional differences is at the top of our file.
 3. Back up both volumes (see above).
-4. Set `OPENMRS_TAG` in `.env` (and in `.env.example`), then `docker compose pull && docker compose up -d`.
-5. Wait for the REST API, not the healthcheck. Database migrations can make this start slow.
-6. Run `./scripts/smoke-test.sh`, and update the version table at the top of this README.
+4. Look up the new digests. Each image has to be looked up separately; replace `3.8.0` with
+   the target release:
+
+   ```bash
+   for r in backend frontend gateway; do
+     printf "%s: " $r
+     curl -s "https://hub.docker.com/v2/repositories/openmrs/openmrs-reference-application-3-$r/tags/3.8.0" \
+       | python3 -c 'import json,sys; print(json.load(sys.stdin)["digest"])'
+   done
+   # MariaDB, only if upstream changed its version:
+   curl -s https://hub.docker.com/v2/repositories/library/mariadb/tags/<version> \
+     | python3 -c 'import json,sys; print(json.load(sys.stdin)["digest"])'
+   ```
+
+5. In `docker-compose.yml`, replace **both** the tag and the digest of each image
+   (`…:3.8.0@sha256:<new digest>`). If you change only the tag, the old digest still wins
+   and nothing is upgraded.
+6. `docker compose pull && docker compose up -d`, then check that what runs is what you pinned:
+   `docker compose images` and
+   `docker image inspect <image> -f '{{index .RepoDigests 0}}'`.
+7. Wait for the REST API, not the healthcheck. Database migrations can make this start slow.
+8. Run `./scripts/smoke-test.sh`, and update the version and image tables in this README.
 
 Never use the moving tags (`latest`, `qa`, `nightly`, `3.7.x`): they change without notice.
 
@@ -262,14 +288,33 @@ patients on the first start. No `3.7.1-no-demo` image exists. A clean production
 
 ```
 OpenMrs-EMR/
-├── docker-compose.yml     # the stack (upstream + documented changes)
-├── .env.example           # template for .env (secrets, version pin, port)
+├── docker-compose.yml     # the stack (upstream + documented changes, images pinned by digest)
+├── .env.example           # template for .env (secrets, port)
 ├── .env                   # real secrets - git-ignored, never commit
 ├── scripts/
-│   └── smoke-test.sh      # read-only health check
+│   ├── smoke-test.sh      # read-only health check
+│   └── fetch-sources.sh   # clones the OpenMRS source code (exact running versions) to ../openmrs-source
+├── docs/
+│   └── learning-path.md   # ordered official videos/courses, with time estimates
 ├── backups/               # local backups - git-ignored (contains patient data)
 ├── CLAUDE.md              # working rules for this repository
 └── README.md
 ```
+
+### Source code (outside this repository)
+
+We don't build OpenMRS; we run the community images. To **read** the code of exactly what
+runs, clone it next to this repository:
+
+```bash
+./scripts/fetch-sources.sh          # about 1 minute, about 280 MB, into ../openmrs-source/
+```
+
+You get 46 shallow clones (the release tag only, no history): `distro/`, `core/`,
+`content/` (the reference configuration: concepts, forms, locations), `backend-modules/`
+(30) and `frontend/` (12 repositories that produce the 45 O3 apps).
+`../openmrs-source/VERSIONS.md` lists each repository with its tag and commit. These are
+study copies, so don't edit them. **When upgrading**, update the list in the script, delete
+`../openmrs-source/` and run the script again.
 
 Upstream reference: https://github.com/openmrs/openmrs-distro-referenceapplication (tag `3.7.1`).
