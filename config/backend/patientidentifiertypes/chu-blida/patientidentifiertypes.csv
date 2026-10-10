@@ -1,0 +1,2 @@
+Uuid,Void/Retire,Name,Description,Required,Format,Format description,Validator,Location behavior,Uniqueness behavior
+753dee49-6b64-4ab1-95d7-1fd1e0e32223,,NIN,"Numéro d'identification national (carte d'identité biométrique), 18 chiffres",FALSE,^[0-9]{18}$,Exactement 18 chiffres,,NOT_USED,UNIQUE

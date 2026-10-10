@@ -1,0 +1,9 @@
+Uuid,Void/Retire,Name,Description
+61b05bd4-1b0a-440e-9e7b-fd3314015c1b,,Diagnostique,"Actes réalisés pour identifier, évaluer ou surveiller une affection."
+d19ebec8-48c4-4c61-8156-a3925ef749c4,,Chirurgicale,Actes invasifs ou opératoires réalisés pour traiter ou corriger une affection.
+b8bd2919-21c2-4f44-b5ea-8b40a124e33f,,Imagerie,Actes produisant des images médicales pour le diagnostic ou le suivi.
+2fd066f8-c6fa-4612-adbc-327bdff99fa4,,Thérapeutique,"Actes réalisés pour traiter, prendre en charge ou améliorer l'état du patient."
+41a2c62d-99d6-453f-966d-624736fc1088,,Soins infirmiers,Soins courants réalisés par l'équipe soignante.
+7a063c89-1aa3-478f-b991-ad3cdc6edf6b,,Urgence,Actes urgents ou vitaux réalisés en situation d'urgence.
+11f3a801-f6e2-4fca-bd5b-96ca9a56ea32,,Externe,Actes réalisés dans un autre établissement ou par un intervenant extérieur.
+ba8369fa-49db-4cc0-a730-9ab96eca75e1,,Autre,Actes n'entrant dans aucune autre catégorie.

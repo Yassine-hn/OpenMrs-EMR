@@ -1,0 +1,8 @@
+Uuid,Void/Retire,Name,Description,Parent,Tag|Login Location,Tag|Visit Location,Tag|Facility Location,Tag|Queue Location,Tag|Admission Location,Tag|Appointment Location,Tag|Transfer Location,Address 1,City/Village,County/District,State/Province,Country,_order:1000
+811d3b4a-2aec-4691-8963-8b721ae6517e,,CHU Frantz Fanon de Blida,Centre hospitalo-universitaire Frantz Fanon,,,TRUE,TRUE,,,,,,Blida,Blida,Blida,Algérie,
+0b7cbcef-c154-4fb4-b6d5-80c0e3b5b869,,Service de neurochirurgie,Service de neurochirurgie du CHU,CHU Frantz Fanon de Blida,,,,,,,,,,,,,
+795d1d96-f5fb-4966-bea0-753525a24d71,,Consultations de neurochirurgie,Consultations externes du service,Service de neurochirurgie,TRUE,,,TRUE,,TRUE,,,,,,,
+fcd0595e-4a87-4c01-80cc-44da03fd1100,,Neurochirurgie - Hommes,Unité d'hospitalisation hommes,Service de neurochirurgie,TRUE,,,,TRUE,,TRUE,,,,,,
+56e8bc51-7b63-47d3-97e3-012265ee2529,,Neurochirurgie - Femmes,Unité d'hospitalisation femmes,Service de neurochirurgie,TRUE,,,,TRUE,,TRUE,,,,,,
+e63921e3-a442-40e9-bb49-befcfb3fa95a,,Neurochirurgie - Soins intensifs,Unité de soins intensifs du service,Service de neurochirurgie,TRUE,,,,TRUE,,TRUE,,,,,,
+f5fb4913-6cbd-4535-a6a9-299bd3c0f9a0,,Bloc opératoire,Bloc opératoire (programme de neurochirurgie),Service de neurochirurgie,TRUE,,,TRUE,,,,,,,,,

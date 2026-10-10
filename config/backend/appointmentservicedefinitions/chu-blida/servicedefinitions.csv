@@ -1,0 +1,4 @@
+Uuid,Void/Retire,Name,Description,Duration,Start Time,End Time,Max Load,Speciality,Location,Label Colour
+267fbfe0-9e46-5346-b4d6-a42c28379315,,Consultation de neurochirurgie,Consultation externe de neurochirurgie (première consultation et suivi),20,08:30,13:00,25,72b50e8b-21e3-5119-89f3-1cc0968a8910,795d1d96-f5fb-4966-bea0-753525a24d71,#a6c8ff
+d6349026-87d2-5c5b-9511-777f3957431e,,Consultation post-opératoire,Contrôle après une intervention neurochirurgicale,15,08:30,13:00,15,72b50e8b-21e3-5119-89f3-1cc0968a8910,795d1d96-f5fb-4966-bea0-753525a24d71,#a7f0ba
+b3cbc0f4-eeaa-548b-8bd4-12d9fac52c19,,Consultation de neuro-oncologie,Suivi des tumeurs du système nerveux,20,08:30,13:00,10,72b50e8b-21e3-5119-89f3-1cc0968a8910,795d1d96-f5fb-4966-bea0-753525a24d71,#e8daff

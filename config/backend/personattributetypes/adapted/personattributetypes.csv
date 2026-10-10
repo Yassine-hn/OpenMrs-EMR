@@ -1,0 +1,10 @@
+Uuid,Void/Retire,Name,Description,Format,Foreign,Searchable
+14d4f066-15f5-102d-96e4-000c29c2a5d7,,Téléphone,Numéro de téléphone de la personne,java.lang.String,,
+8b56eac7-5c76-4b9c-8c6f-1deab8d3fc47,,Patient non identifié,Signale un patient qui n'a pas pu être identifié à l'arrivée,java.lang.String,,
+8d8718c2-c2cc-11de-8d13-0010c6dffd0f,,Lieu de naissance,Lieu de naissance de la personne,java.lang.String,,
+8d871d18-c2cc-11de-8d13-0010c6dffd0f,,Nom de la mère,Nom et prénom de la mère,java.lang.String,,
+8d871afc-c2cc-11de-8d13-0010c6dffd0f,,Nationalité,Nationalité de la personne,java.lang.String,,
+8d871f2a-c2cc-11de-8d13-0010c6dffd0f,true,Civil Status,Marriage status of this person - retired (core default),org.openmrs.Concept,,
+8d87236c-c2cc-11de-8d13-0010c6dffd0f,true,Health Center,Specific Location of this person's home health center - retired (core default),org.openmrs.Location,,
+8d872150-c2cc-11de-8d13-0010c6dffd0f,true,Health District,District/region of the person's home health center - retired (core default),java.lang.String,,
+8d871386-c2cc-11de-8d13-0010c6dffd0f,true,Race,Group of persons related by common descent or heredity - retired (core default),java.lang.String,,

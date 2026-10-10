@@ -1,0 +1,18 @@
+{
+    "report.encounterPrinting.header.patientName": "true",
+    "report.encounterPrinting.header.location": "true",
+    "report.encounterPrinting.header.formName": "false",
+    "report.encounterPrinting.header.encounterDate": "true",
+    "report.encounterPrinting.header.visitStartDate": "false",
+    "report.encounterPrinting.header.visitEndDate": "false",
+    "report.encounterPrinting.header.visitType": "false",
+    "report.encounterPrinting.header.patientIdentifiers": "true",
+    "report.encounterPrinting.header.patientIdentifierTypes": "N° de dossier,NIN",
+    "report.encounterPrinting.header.personAttributes": "false",
+    "report.encounterPrinting.header.personAttributeTypes": "",
+    "report.encounterPrinting.header.visitAttributes": "false",
+    "report.encounterPrinting.header.visitAttributeTypes": "",
+    "report.encounterPrinting.footer.customText": "CHU Frantz Fanon de Blida - Service de neurochirurgie",
+    "report.encounterPrinting.stylesheetPath": "configuration/printing/chu-blida-encounter.xsl",
+    "report.encounterPrinting.logopath": ""
+}

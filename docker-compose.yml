@@ -11,6 +11,13 @@
 #   - host port configurable via HTTP_PORT
 #   - db healthcheck reads credentials inside the container instead of interpolating them
 #   - backend waits for db to be healthy, not just started
+#   - OUR CONFIGURATION instead of the demo (see docs/configuration.md):
+#       backend:  ./config/backend mounted over /openmrs/distribution/openmrs_config (read-only);
+#                 the backend copies it into its data folder on every start, then Initializer loads it
+#       frontend: ./config/frontend mounted at /usr/share/nginx/html/site (read-only), used via
+#                 SPA_CONFIG_URLS (replaces config-core_demo.json); French as default language
+#   - admin password from .env (OMRS_ADMIN_PASSWORD) instead of the public default
+#   - time zone Africa/Algiers (UTC+1, no daylight saving) for both the JVM and MariaDB
 #
 # Usage: cp .env.example .env  (fill it in), then  docker compose up -d
 # UI: http://localhost/openmrs/spa    Legacy admin UI: http://localhost/openmrs
@@ -33,8 +40,10 @@ services:
     environment:
       SPA_PATH: /openmrs/spa
       API_URL: /openmrs
-      SPA_CONFIG_URLS: /openmrs/spa/config-core_demo.json
-      SPA_DEFAULT_LOCALE:
+      SPA_CONFIG_URLS: /openmrs/spa/site/config-chu-blida.json
+      SPA_DEFAULT_LOCALE: fr
+    volumes:
+      - ./config/frontend:/usr/share/nginx/html/site:ro
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/"]
       timeout: 5s
@@ -55,17 +64,24 @@ services:
       OMRS_CONFIG_CONNECTION_DATABASE: openmrs
       OMRS_CONFIG_CONNECTION_USERNAME: ${OMRS_DB_USER:?set OMRS_DB_USER in .env}
       OMRS_CONFIG_CONNECTION_PASSWORD: ${OMRS_DB_PASSWORD:?set OMRS_DB_PASSWORD in .env}
+      # applied when the database is created (first start on an empty database)
+      OMRS_ADMIN_USER_PASSWORD: ${OMRS_ADMIN_PASSWORD:?set OMRS_ADMIN_PASSWORD in .env}
+      # the image's default JVM options plus the time zone
+      OMRS_JAVA_SERVER_OPTS: "-Dfile.encoding=UTF-8 -server -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Djava.awt.headlesslib=true -Duser.timezone=Africa/Algiers"
+      TZ: Africa/Algiers
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/openmrs"]
       timeout: 5s
     volumes:
       - openmrs-data:/openmrs/data
+      - ./config/backend:/openmrs/distribution/openmrs_config:ro
 
   # MariaDB - the database the O3 distribution is built and tested against
   db:
     image: mariadb:10.11.7@sha256:27292753bb759cd22be72e3c8192f1259ef47010c8634b5da0bc886845efe9fd
     restart: "unless-stopped"
-    command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci"
+    # +01:00 = Africa/Algiers (no daylight saving), same zone as the backend JVM
+    command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --default-time-zone=+01:00"
     healthcheck:
       # $$ = evaluated inside the container, so the password is not written into the compose config
       test: "mysql --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --execute \"SHOW DATABASES;\""

@@ -1,0 +1,409 @@
+{
+  "uuid": "61a1bcaa-f4cb-538f-b7c4-5077ddca627a",
+  "name": "Compte rendu opératoire",
+  "description": "Compte rendu d'intervention neurochirurgicale (version 1, à valider par le service)",
+  "version": "1",
+  "published": true,
+  "retired": false,
+  "encounter": "Compte rendu opératoire",
+  "processor": "EncounterFormProcessor",
+  "referencedForms": [],
+  "pages": [
+    {
+      "label": "Compte rendu opératoire",
+      "sections": [
+        {
+          "label": "Intervention",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Intervention réalisée",
+              "type": "obs",
+              "id": "interv",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "ccdb29b0-90b1-5d77-bdcc-16a7801f7725",
+                "rows": 2
+              }
+            },
+            {
+              "label": "Caractère de l'intervention",
+              "type": "obs",
+              "id": "caract",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "23bf8337-4cb5-548d-9beb-55e251cdf276",
+                "answers": [
+                  {
+                    "concept": "a71a7da0-a92a-5496-9ad0-7accfb9a8a8a",
+                    "label": "Programmée"
+                  },
+                  {
+                    "concept": "3e41bd04-0ad2-5303-8d4b-1b72236aecfc",
+                    "label": "Urgente"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Côté",
+              "type": "obs",
+              "id": "cote",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "ce69cc2c-3683-54b7-a9fb-c5f7503851da",
+                "answers": [
+                  {
+                    "concept": "56c76918-6374-5373-b522-52ba68c9c28c",
+                    "label": "Droit"
+                  },
+                  {
+                    "concept": "c9c9a106-8090-5ef1-9015-e6bdae3f8904",
+                    "label": "Gauche"
+                  },
+                  {
+                    "concept": "22b1f82e-e168-522b-b49e-08fc3599cbb5",
+                    "label": "Bilatéral"
+                  },
+                  {
+                    "concept": "685e00db-2929-500b-bb5b-c72184a4cb7b",
+                    "label": "Médian"
+                  },
+                  {
+                    "concept": "1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non applicable"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Indication opératoire",
+              "type": "obs",
+              "id": "indic",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "36344709-d8cd-5ed3-837d-9f0d55214a36",
+                "rows": 3
+              }
+            },
+            {
+              "label": "Diagnostic pré-opératoire",
+              "type": "obs",
+              "id": "dxpre",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "3100c8f8-dfae-549a-996a-b252981b93e5"
+              }
+            },
+            {
+              "label": "Diagnostic post-opératoire",
+              "type": "obs",
+              "id": "dxpost",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "cfb3cf91-afaf-5dd0-8feb-e517111bd7ae"
+              }
+            }
+          ]
+        },
+        {
+          "label": "Équipe et anesthésie",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Opérateur(s)",
+              "type": "obs",
+              "id": "oper",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "e2b2a360-0fac-5e72-886f-ac8fcee1a41f"
+              }
+            },
+            {
+              "label": "Aide(s) opératoire(s)",
+              "type": "obs",
+              "id": "aides",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "21ee0f78-bcf1-55c3-a061-3575f855913d"
+              }
+            },
+            {
+              "label": "Anesthésiste",
+              "type": "obs",
+              "id": "anesth",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "605fea6f-3b00-5085-84b3-4897efb2a782"
+              }
+            },
+            {
+              "label": "Type d'anesthésie",
+              "type": "obs",
+              "id": "typane",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "d098c39a-f74f-5734-9493-f7bcf0c13005",
+                "answers": [
+                  {
+                    "concept": "b413772a-62b3-5d76-b5fc-741a3afa3f88",
+                    "label": "Anesthésie générale"
+                  },
+                  {
+                    "concept": "e114a55a-ae43-5956-b0e7-64feee7dfc44",
+                    "label": "Anesthésie locale"
+                  },
+                  {
+                    "concept": "cab4106f-1154-5209-a946-4cf255ead27c",
+                    "label": "Anesthésie locorégionale"
+                  },
+                  {
+                    "concept": "406d85b9-0a2b-59e3-9c9a-201da5403ce0",
+                    "label": "Sédation"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "label": "Technique opératoire",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Installation du patient",
+              "type": "obs",
+              "id": "posit",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "bca52632-b24a-5704-9efc-a86398eab595",
+                "answers": [
+                  {
+                    "concept": "787549e6-9edf-5c43-bac8-573bea0d1b71",
+                    "label": "Décubitus dorsal"
+                  },
+                  {
+                    "concept": "c95ced74-68e6-5fce-91ba-79d4867f6bb2",
+                    "label": "Décubitus ventral"
+                  },
+                  {
+                    "concept": "35b720df-ac2c-552c-aad2-5e3c0c16849f",
+                    "label": "Décubitus latéral"
+                  },
+                  {
+                    "concept": "bc448488-d38e-5b9a-858d-bff5e9e233c2",
+                    "label": "Position assise"
+                  },
+                  {
+                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Autre"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Voie d'abord",
+              "type": "obs",
+              "id": "voie",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "005a64f3-e821-5f49-baad-967d309231b0"
+              }
+            },
+            {
+              "label": "Neuronavigation",
+              "type": "obs",
+              "id": "navig",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "a5ec09cd-fddc-5d5b-b78e-00171368e142",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Oui"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Microscope opératoire",
+              "type": "obs",
+              "id": "micro",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "6dab1184-1b8b-50fd-9a30-66abe4710051",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Oui"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Description de l'intervention",
+              "type": "obs",
+              "id": "descr",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "84dbb8b4-af34-525c-b9b9-db4989c04df1",
+                "rows": 8
+              }
+            },
+            {
+              "label": "Constatations per-opératoires",
+              "type": "obs",
+              "id": "const",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "a7c85f48-3bf7-5ed0-8174-559b332c1208",
+                "rows": 4
+              }
+            },
+            {
+              "label": "Qualité de l'exérèse",
+              "type": "obs",
+              "id": "exerese",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "b585a9e4-0b01-53f6-962f-78edc211e9a2",
+                "answers": [
+                  {
+                    "concept": "5ccbc2c4-1acd-5a29-bc11-d0e9cc3c4a92",
+                    "label": "Exérèse complète"
+                  },
+                  {
+                    "concept": "529dedb2-175d-507f-8878-1c912109e18a",
+                    "label": "Exérèse subtotale"
+                  },
+                  {
+                    "concept": "0066a634-689d-5fa4-b4e7-73fb4d3b8f3d",
+                    "label": "Exérèse partielle"
+                  },
+                  {
+                    "concept": "52807113-90d9-5cd9-bca4-06062144d60f",
+                    "label": "Biopsie seule"
+                  },
+                  {
+                    "concept": "1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non applicable"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Prélèvement pour anatomopathologie",
+              "type": "obs",
+              "id": "anapath",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "af157bce-034f-5b3f-8002-f45d35d056e8",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Oui"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Matériel implanté",
+              "type": "obs",
+              "id": "mater",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "9ae2d09e-0d86-57e9-b18e-10e1e04050a3"
+              }
+            }
+          ]
+        },
+        {
+          "label": "Fin d'intervention",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Pertes sanguines estimées (mL)",
+              "type": "obs",
+              "id": "pertes",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "3a200b6a-db12-5014-937a-cd129a8a1df8",
+                "min": "0",
+                "max": "10000"
+              }
+            },
+            {
+              "label": "Transfusion",
+              "type": "obs",
+              "id": "transf",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "01eba506-8649-5673-ad26-c94c19521423",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Oui"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Incidents et complications per-opératoires",
+              "type": "obs",
+              "id": "incid",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "b61ed110-1790-5a5d-b9af-72353c0c7e6d",
+                "rows": 3
+              }
+            },
+            {
+              "label": "Drainage",
+              "type": "obs",
+              "id": "drain",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "abb8797b-bc41-5bc1-8889-789426876f6e"
+              }
+            },
+            {
+              "label": "Fermeture",
+              "type": "obs",
+              "id": "ferm",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "9f0ddb4b-99f4-5705-ab58-8d07de5a1277"
+              }
+            },
+            {
+              "label": "Consignes post-opératoires",
+              "type": "obs",
+              "id": "consig",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "29588a1d-1355-5697-8f2b-2e97b219b759",
+                "rows": 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

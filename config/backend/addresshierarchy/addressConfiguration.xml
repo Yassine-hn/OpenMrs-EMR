@@ -1,0 +1,47 @@
+<addressConfiguration>
+  <!-- Algerian address hierarchy: Pays > Wilaya > Daira > Commune, then a free-text address line.
+       Data: scripts/build-address-hierarchy.py (69 wilayas, Law 26-06 of 2026). -->
+  <wipe>true</wipe>
+  <addressComponents>
+    <addressComponent>
+      <field>COUNTRY</field>
+      <nameMapping>Pays</nameMapping>
+      <sizeMapping>40</sizeMapping>
+      <requiredInHierarchy>true</requiredInHierarchy>
+    </addressComponent>
+    <addressComponent>
+      <field>STATE_PROVINCE</field>
+      <nameMapping>Wilaya</nameMapping>
+      <sizeMapping>40</sizeMapping>
+      <requiredInHierarchy>true</requiredInHierarchy>
+    </addressComponent>
+    <addressComponent>
+      <field>COUNTY_DISTRICT</field>
+      <nameMapping>Daïra</nameMapping>
+      <sizeMapping>40</sizeMapping>
+      <requiredInHierarchy>true</requiredInHierarchy>
+    </addressComponent>
+    <addressComponent>
+      <field>CITY_VILLAGE</field>
+      <nameMapping>Commune</nameMapping>
+      <sizeMapping>40</sizeMapping>
+      <requiredInHierarchy>true</requiredInHierarchy>
+    </addressComponent>
+    <addressComponent>
+      <field>ADDRESS_1</field>
+      <nameMapping>Adresse</nameMapping>
+      <sizeMapping>60</sizeMapping>
+      <requiredInHierarchy>false</requiredInHierarchy>
+    </addressComponent>
+  </addressComponents>
+  <lineByLineFormat>
+    <string>address1</string>
+    <string>cityVillage, countyDistrict</string>
+    <string>stateProvince, country</string>
+  </lineByLineFormat>
+  <addressHierarchyFile>
+    <filename>addresshierarchy.csv</filename>
+    <entryDelimiter>,</entryDelimiter>
+    <identifierDelimiter>%</identifierDelimiter>
+  </addressHierarchyFile>
+</addressConfiguration>

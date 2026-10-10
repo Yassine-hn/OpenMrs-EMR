@@ -1,0 +1,66 @@
+{
+  "uuid": "a2ddb5d0-fc56-599c-9d79-bc5d18ce80df",
+  "name": "Demande d'admission",
+  "description": "Demande d'admission dans une unité d'hospitalisation de neurochirurgie (traitée par l'équipe soignante dans l'application Admissions)",
+  "version": "1",
+  "published": true,
+  "retired": false,
+  "encounter": "Demande de transfert",
+  "processor": "EncounterFormProcessor",
+  "referencedForms": [],
+  "pages": [
+    {
+      "label": "Demande d'admission",
+      "sections": [
+        {
+          "label": "Admission",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obsGroup",
+              "id": "inpatientDispositionConstruct",
+              "questionOptions": {
+                "concept": "CIEL:169405",
+                "rendering": "group"
+              },
+              "questions": [
+                {
+                  "id": "disposition",
+                  "type": "obs",
+                  "required": true,
+                  "label": "Décision",
+                  "questionOptions": {
+                    "rendering": "radio",
+                    "concept": "CIEL:169402",
+                    "answers": [
+                      {
+                        "concept": "CIEL:168619",
+                        "label": "Admission en hospitalisation"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "admitToLocation",
+                  "type": "obs",
+                  "required": true,
+                  "label": "Unité d'admission",
+                  "questionOptions": {
+                    "rendering": "ui-select-extended",
+                    "concept": "CIEL:169403",
+                    "datasource": {
+                      "name": "location_datasource",
+                      "config": {
+                        "tag": "Admission Location"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

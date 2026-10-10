@@ -1,0 +1,43 @@
+<config>
+    <globalProperties>
+        <!-- Language: French by default; English and Arabic may be chosen by a user -->
+        <globalProperty>
+            <property>default_locale</property>
+            <value>fr</value>
+        </globalProperty>
+        <globalProperty>
+            <property>locale.allowed.list</property>
+            <value>fr, en, ar</value>
+        </globalProperty>
+
+        <!-- Queues: concept sets from the kept OCL package DemoQueueConcepts (same values as upstream) -->
+        <globalProperty>
+            <property>queue.serviceConceptSetName</property>
+            <value>a8f3f64a-11d5-4a09-b0fb-c8118fa349f3</value>
+        </globalProperty>
+        <globalProperty>
+            <property>queue.priorityConceptSetName</property>
+            <value>78063dec-b6d8-40c1-9483-dd4d3c3ca434</value>
+        </globalProperty>
+        <globalProperty>
+            <property>queue.statusConceptSetName</property>
+            <value>d60ffa60-fca6-4c60-aea9-a79469ae65c7</value>
+        </globalProperty>
+        <globalProperty>
+            <property>queue.sortWeightGenerator</property>
+            <value>basicPrioritySortWeightGenerator</value>
+        </globalProperty>
+
+        <!-- Cause of death: concept set from the kept OCL package DeathCause_v11 -->
+        <globalProperty>
+            <property>concept.causeOfDeath</property>
+            <value>9272a14b-7260-4353-9e5b-5787b5dead9d</value>
+        </globalProperty>
+
+        <!-- Attachments: scanned documents and photos -->
+        <globalProperty>
+            <property>attachments.allowedFileExtensions</property>
+            <value>jpeg,jpg,png,pdf</value>
+        </globalProperty>
+    </globalProperties>
+</config>

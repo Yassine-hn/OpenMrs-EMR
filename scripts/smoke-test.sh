@@ -2,13 +2,13 @@
 # Read-only smoke test for the running stack. Changes nothing.
 # Runs on the HOST, from the repo root:   ./scripts/smoke-test.sh
 #
-# Credentials default to the distribution's well-known admin account. Once it has been
-# changed, pass the real ones:   OMRS_USER=admin OMRS_PASS='...' ./scripts/smoke-test.sh
+# Credentials: OMRS_USER / OMRS_PASS if given, otherwise "admin" with OMRS_ADMIN_PASSWORD
+# from .env, otherwise the distribution's public default.
 set -u
 
 BASE="${BASE_URL:-http://localhost:${HTTP_PORT:-80}}"
 USER_="${OMRS_USER:-admin}"
-PASS_="${OMRS_PASS:-Admin123}"
+PASS_="${OMRS_PASS:-Admin123}"   # overridden below by OMRS_ADMIN_PASSWORD from .env
 fail=0
 
 check() { # check <description> <command...>
@@ -58,8 +58,36 @@ patients() {
   api "ws/fhir2/R4/Patient?_summary=count" | python3 -c 'import json,sys; print(json.load(sys.stdin)["total"], "patients")'
 }
 
+# --- our configuration (config/, docs/configuration.md) ---
+default_locale() {
+  api "ws/rest/v1/systemsetting?q=default_locale&v=custom:(property,value)" | python3 -c '
+import json,sys
+r=[x for x in json.load(sys.stdin)["results"] if x["property"]=="default_locale"]
+v=r[0]["value"] if r else None; print("default_locale =", v); sys.exit(0 if v=="fr" else 1)'
+}
+
+chu_locations() {
+  api "ws/rest/v1/location?tag=Login%20Location&v=custom:(display)" | python3 -c '
+import json,sys
+names=sorted(x["display"] for x in json.load(sys.stdin)["results"]); print(", ".join(names))
+sys.exit(0 if "Consultations de neurochirurgie" in names and not any("Ubuntu" in n or "Ward" in n for n in names) else 1)'
+}
+
+address_hierarchy() {
+  api "module/addresshierarchy/ajax/getChildAddressHierarchyEntries.form?searchString=Alg%C3%A9rie" | python3 -c '
+import json,sys
+w=json.load(sys.stdin); print(len(w), "wilayas under Algérie"); sys.exit(0 if len(w)==69 else 1)'
+}
+
+no_demo_users() {
+  api "ws/rest/v1/user?q=clerk&v=custom:(username)" | python3 -c '
+import json,sys
+u=[x["username"] for x in json.load(sys.stdin)["results"]]; print("demo users found:", u if u else "none"); sys.exit(1 if u else 0)'
+}
+
 cd "$(dirname "$0")/.." || exit 1
 [ -f .env ] && set -a && . ./.env && set +a && BASE="${BASE_URL:-http://localhost:${HTTP_PORT:-80}}"
+PASS_="${OMRS_PASS:-${OMRS_ADMIN_PASSWORD:-$PASS_}}"
 
 echo "Smoke test against $BASE"
 check "containers running and healthy"      containers_up
@@ -70,6 +98,10 @@ check "OpenMRS core version"                 core_version
 check "all modules started"                  modules
 check "FHIR R4 endpoint"                     fhir
 check "patient count (FHIR)"                 patients
+check "config: French by default"            default_locale
+check "config: CHU Blida login locations"    chu_locations
+check "config: address hierarchy (DZ)"       address_hierarchy
+check "config: no demo users"                no_demo_users
 
 [ $fail = 0 ] && echo "ALL CHECKS PASSED" || echo "SOME CHECKS FAILED"
 exit $fail

@@ -1,0 +1,248 @@
+{
+  "@openmrs/esm-primary-navigation-app": {
+    "logo": {
+      "src": "/openmrs/spa/site/logo-chu-blida-nav.svg",
+      "alt": "CHU Frantz Fanon Blida - Neurochirurgie",
+      "name": "CHU Blida - Neurochirurgie"
+    },
+    "extensionSlots": {
+      "app-menu-slot": {
+        "remove": [
+          "dispensing-link",
+          "forms-app-link"
+        ]
+      }
+    }
+  },
+  "@openmrs/esm-login-app": {
+    "logo": {
+      "src": "/openmrs/spa/site/logo-chu-blida-login.svg",
+      "alt": "CHU Frantz Fanon Blida - Neurochirurgie"
+    }
+  },
+  "@openmrs/esm-home-app": {
+    "extensionSlots": {
+      "homepage-dashboard-slot": {
+        "remove": [
+          "laboratory-dashboard-link",
+          "billing-dashboard-link"
+        ]
+      }
+    }
+  },
+  "@openmrs/esm-patient-chart-app": {
+    "restrictByVisitLocationTag": true,
+    "showUpcomingAppointments": true,
+    "visitAttributeTypes": [],
+    "extensionSlots": {
+      "patient-chart-dashboard-slot": {
+        "remove": [
+          "immunization-summary-dashboard",
+          "programs-summary-dashboard",
+          "medications-summary-dashboard",
+          "test-results-summary-dashboard",
+          "patient-orders-summary-dashboard",
+          "billing-summary-dashboard-link"
+        ]
+      },
+      "patient-chart-summary-dashboard-slot": {
+        "remove": [
+          "active-medications-widget",
+          "future-medications-widget",
+          "past-medications-widget"
+        ],
+        "add": [
+          "obs-by-encounter-widget#neuroGlasgow",
+          "obs-by-encounter-widget#neuroPupillesMotricite"
+        ],
+        "configure": {
+          "obs-by-encounter-widget#neuroGlasgow": {
+            "title": "Glasgow et Karnofsky",
+            "resultsName": "évaluations neurologiques",
+            "graphOldestFirst": true,
+            "showGraphByDefault": true,
+            "encounterTypes": [
+              "dab408eb-1e20-5304-8b73-fd54b695b944"
+            ],
+            "dateFormat": "dateTime",
+            "data": [
+              {
+                "concept": "14ba4d64-ac69-531b-b161-5dc3234e4d0c",
+                "label": "Score de Glasgow (/15)",
+                "color": "blue",
+                "graphGroup": "Glasgow"
+              },
+              {
+                "concept": "5283AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "label": "Karnofsky (%)",
+                "color": "green",
+                "graphGroup": "Karnofsky"
+              }
+            ],
+            "table": {
+              "pageSize": 5
+            }
+          },
+          "obs-by-encounter-widget#neuroPupillesMotricite": {
+            "title": "Pupilles et motricité",
+            "resultsName": "évaluations neurologiques",
+            "graphOldestFirst": true,
+            "showGraphByDefault": false,
+            "encounterTypes": [
+              "dab408eb-1e20-5304-8b73-fd54b695b944"
+            ],
+            "dateFormat": "dateTime",
+            "data": [
+              {
+                "concept": "c150c04d-6453-5f37-83a2-5efd523da7b6",
+                "label": "Pupille D (mm)",
+                "color": "blue",
+                "graphGroup": "Pupilles"
+              },
+              {
+                "concept": "9d5ce781-6dcb-5e5c-a11f-dee88dacfbc1",
+                "label": "Pupille G (mm)",
+                "color": "red",
+                "graphGroup": "Pupilles"
+              },
+              {
+                "concept": "cb81e0f8-b8ca-519f-a138-c14e892620da",
+                "label": "MS D",
+                "color": "blue",
+                "graphGroup": "Motricité"
+              },
+              {
+                "concept": "e00c5495-e36f-503a-850a-5bc21f685698",
+                "label": "MS G",
+                "color": "red",
+                "graphGroup": "Motricité"
+              },
+              {
+                "concept": "9b1bc9eb-72c3-5a6e-b206-9c42eff39aaa",
+                "label": "MI D",
+                "color": "green",
+                "graphGroup": "Motricité"
+              },
+              {
+                "concept": "70d0aede-e311-5674-9022-0769b14ed961",
+                "label": "MI G",
+                "color": "orange",
+                "graphGroup": "Motricité"
+              }
+            ],
+            "table": {
+              "pageSize": 5
+            }
+          }
+        },
+        "order": [
+          "obs-by-encounter-widget#neuroGlasgow",
+          "obs-by-encounter-widget#neuroPupillesMotricite"
+        ]
+      },
+      "extra-visit-attribute-slot": {
+        "remove": [
+          "billing-checkin-form"
+        ]
+      },
+      "visit-summary-panels": {
+        "remove": [
+          "visit-bills-panel"
+        ]
+      },
+      "patient-banner-tags-slot": {
+        "remove": [
+          "patient-banner-billing-tags"
+        ]
+      }
+    },
+    "Translation overrides": {
+      "fr": {
+        "printEncounter": "Imprimer cette consultation",
+        "completedForms": "Formulaires complétés"
+      }
+    }
+  },
+  "@openmrs/esm-patient-banner-app": {
+    "extensionSlots": {
+      "patient-banner-tags-slot": {
+        "remove": [
+          "patient-banner-billing-tags"
+        ]
+      }
+    }
+  },
+  "@openmrs/esm-patient-registration-app": {
+    "defaultPatientIdentifierTypes": [
+      "753dee49-6b64-4ab1-95d7-1fd1e0e32223"
+    ],
+    "fieldDefinitions": [
+      {
+        "id": "mothersName",
+        "type": "person attribute",
+        "uuid": "8d871d18-c2cc-11de-8d13-0010c6dffd0f",
+        "label": "Nom de la mère"
+      },
+      {
+        "id": "profession",
+        "type": "person attribute",
+        "uuid": "145a670f-6913-4be9-9aa5-25007f4eea3c",
+        "label": "Profession"
+      },
+      {
+        "id": "emergencyContact",
+        "type": "person attribute",
+        "uuid": "63a7c5f4-c02e-44df-9e3e-94ccecafe4ce",
+        "label": "Personne à prévenir (nom, lien, téléphone)"
+      }
+    ],
+    "sectionDefinitions": [
+      {
+        "id": "demographics",
+        "name": "Informations de base",
+        "fields": [
+          "name",
+          "gender",
+          "dob",
+          "id",
+          "mothersName",
+          "profession"
+        ]
+      },
+      {
+        "id": "contact",
+        "name": "Coordonnées",
+        "fields": [
+          "address",
+          "phone",
+          "emergencyContact"
+        ]
+      }
+    ]
+  },
+  "@openmrs/esm-styleguide": {
+    "Brand color #1": "#005d5d"
+  },
+  "@openmrs/esm-patient-procedures-app": {
+    "Translation overrides": {
+      "fr": {
+        "procedures": "Actes et procédures",
+        "Procedures": "Actes et procédures"
+      }
+    }
+  },
+  "@openmrs/esm-patient-notes-app": {
+    "Translation overrides": {
+      "fr": {
+        "stickyNote": "Note rapide"
+      }
+    }
+  },
+  "@openmrs/esm-ward-app": {
+    "Translation overrides": {
+      "fr": {
+        "totalBeds": "Total des lits"
+      }
+    }
+  }
+}

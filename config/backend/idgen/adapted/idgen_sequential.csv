@@ -1,0 +1,2 @@
+Uuid,Void/Retire,Identifier type,Name,Description,Prefix,Suffix,First identifier base,Min length,Max length,Base character set,_version:1,_order:6000
+8549f706-7e85-4c1d-9424-217d50a2988b,,05a29f94-c0ed-11e2-94be-8c13b969e334,Générateur du N° de dossier,Générateur séquentiel du N° de dossier,,,100000,7,7,0123456789ACDEFGHJKLMNPRTUVWXY,,

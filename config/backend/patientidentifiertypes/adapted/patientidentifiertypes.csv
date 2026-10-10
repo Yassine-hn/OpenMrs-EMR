@@ -1,0 +1,4 @@
+Uuid,Void/Retire,Name,Description,Required,Format,Format description,Validator,Location behavior,Uniqueness behavior
+05a29f94-c0ed-11e2-94be-8c13b969e334,,N° de dossier,"Numéro de dossier du patient, généré automatiquement, avec chiffre de contrôle",TRUE,,,org.openmrs.module.idgen.validator.LuhnMod30IdentifierValidator,NOT_USED,UNIQUE
+8d79403a-c2cc-11de-8d13-0010c6dffd0f,true,Old Identification Number,Number given out prior to the OpenMRS system (No check digit) - retired (core default),FALSE,,,,NOT_USED,
+8d793bee-c2cc-11de-8d13-0010c6dffd0f,true,OpenMRS Identification Number,Unique number used in OpenMRS - retired (core default),FALSE,,,,NOT_USED,

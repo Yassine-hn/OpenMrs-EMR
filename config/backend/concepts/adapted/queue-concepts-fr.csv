@@ -1,0 +1,9 @@
+Uuid,Void/Retire,Fully specified name:en,Fully specified name:fr,Data class,Data type,_version:1,_order:1200
+f4620bfa-3625-4883-bd3f-84c2cce14470,,Not Urgent,Non urgent,Misc,N/A,,
+dc3492ef-24a5-4fd9-b58d-4fd2acf7071f,,Urgent,Urgent,Misc,N/A,,
+04f6f7e0-e3cb-4e13-a133-4479f759574e,,Emergency,Urgence,Misc,N/A,,
+e96e2ce6-e326-46f2-8015-17572689c401,,Clinical Consult,Consultation,Misc,N/A,,
+d62d58e9-ec91-4108-9643-00f5f23bf51c,,Triage,Tri,Misc,N/A,,
+51ae5e4d-b72b-4912-bf31-a17efb690aeb,,Waiting,Patient en attente,Misc,N/A,,
+ca7494ae-437f-4fd0-8aae-b88b9a2ba47d,,In Service,Pris en charge,Misc,N/A,,
+b559fb77-4e1e-4285-b9b7-1d03e0ba983f,,Finished Service,Prise en charge terminée,Misc,N/A,,

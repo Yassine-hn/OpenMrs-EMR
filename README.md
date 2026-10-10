@@ -1,11 +1,24 @@
 # OpenMrs-EMR
 
 A from-scratch deployment of the **OpenMRS O3 Reference Application** — the current
-community distribution of OpenMRS — running in Docker. It is the base for a new hospital
-system.
+community distribution of OpenMRS — running in Docker, for the **Neurosurgery department of
+CHU Frantz Fanon, Blida**.
 
-**Current phase: stock community system only.** No custom modules, no PACS/imaging, no
-extra services. Those are added later, one decision at a time.
+**Current phase (3): neurosurgery content on the unchanged 3.7.1 images**, all by configuration:
+no demo data, CHU Blida locations, French by default, the 69-wilaya address hierarchy, our
+identifiers and roles (phase 2); neurosurgery forms with PDF printing on a CHU layout,
+Glasgow/Karnofsky trends, consultation services and queue, 42 beds (phase 3, in progress).
+No custom code yet; imaging (Orthanc/OHIF) and new modules come in later phases.
+
+| Document | Content |
+| --- | --- |
+| [`docs/neurosurgery-o3-plan.md`](docs/neurosurgery-o3-plan.md) | functional plan, assumptions, phases |
+| [`docs/configuration.md`](docs/configuration.md) | the configuration package in `config/`: what it contains, where it comes from, how to change it |
+| [`docs/test-report-3.7.1.md`](docs/test-report-3.7.1.md) | UI test of the stock 3.7.1 distribution (2026-10-01) |
+| [`docs/test-report-phase2.md`](docs/test-report-phase2.md) | test of our configuration (2026-10-10) |
+| [`docs/neurosurgery-forms.md`](docs/neurosurgery-forms.md) | the neurosurgery forms and printed documents (for clinical review) |
+| [`docs/test-report-phase3.md`](docs/test-report-phase3.md) | test of the neurosurgery content: forms, printing, clinic, beds (in progress) |
+| [`docs/learning-path.md`](docs/learning-path.md) | official OpenMRS learning resources |
 
 | | |
 | --- | --- |
@@ -13,7 +26,8 @@ extra services. Those are added later, one decision at a time.
 | OpenMRS core | **2.8.8** (Java 21, Tomcat 9) |
 | Database | MariaDB **10.11.7** |
 | Modules | 30 bundled backend modules — see [Bundled modules](#bundled-modules) |
-| Verified on | 2026-09-26, Linux, Docker 29.8 / Compose v5.5, 8 cores, 7.6 GB RAM |
+| Verified on | 2026-09-26 (stock) and 2026-10-10 (our configuration), Linux, Docker 29.8 / Compose v5.5, 8 cores, 7.6 GB RAM |
+| Configuration | ours, in `config/` (no demo data) — see [`docs/configuration.md`](docs/configuration.md) |
 
 ## Table of contents
 
@@ -80,6 +94,8 @@ All commands run on the **host**, from the repository root.
 cp .env.example .env
 sed -i "s/OMRS_DB_PASSWORD=CHANGE_ME/OMRS_DB_PASSWORD=$(openssl rand -hex 16)/; \
         s/MYSQL_ROOT_PASSWORD=CHANGE_ME/MYSQL_ROOT_PASSWORD=$(openssl rand -hex 16)/" .env
+# the admin password needs upper case, lower case and a digit (OpenMRS rule)
+sed -i "s/OMRS_ADMIN_PASSWORD=CHANGE_ME/OMRS_ADMIN_PASSWORD=Adm$(openssl rand -hex 12)X9/" .env
 chmod 600 .env
 
 # 2. Images (about 3 GB)
@@ -92,9 +108,11 @@ docker compose up -d
 ### The first start takes about an hour — this is normal
 
 On the very first start the backend builds the database and then the **Initializer** module
-imports the reference configuration: roughly 4,100 concepts and 23,000 concept links from
-the OCL/CIEL packages, then drugs, forms, and 50 demo patients. On the reference machine
-this took **52 minutes**, mostly on one CPU core.
+imports our configuration (`config/backend/`): about 2,500 concepts and their links from the
+CIEL packages, then the metadata and the 2,162 address entries. On the reference machine this
+took **74 minutes** (2026-10-10), mostly on one CPU core. During that time every page
+redirects to `/openmrs/initialsetup` ("Installation is currently in progress"), which is
+normal.
 
 - **Do not trust "healthy" in `docker compose ps` during this time.** The backend's
   healthcheck only checks that Tomcat answers, so it reports `healthy` after about 30 seconds,
@@ -103,15 +121,15 @@ this took **52 minutes**, mostly on one CPU core.
 
   ```bash
   curl -s http://localhost/openmrs/ws/rest/v1/session
-  # ready: {"authenticated":false,"locale":"en",...}
+  # ready: {"authenticated":false,"locale":"fr","allowedLocales":["fr","en","ar"]}
   ```
 
 - To watch for problems: `docker compose logs -f backend | grep -E "ERROR|FATAL"`.
   See [Known issues](#known-issues-and-log-noise) for errors that are expected.
 - **Do not restart or stop the stack during the first start.**
 
-Later starts skip the import (the Initializer keeps checksums of what it loaded) and are
-ready in about **1 minute**.
+Later starts skip the import (the Initializer keeps checksums of what it loaded and only
+reloads changed files) and are ready in about **50 seconds**.
 
 ### Log in
 
@@ -120,9 +138,9 @@ ready in about **1 minute**.
 | http://localhost/openmrs/spa | O3 user interface (use this) |
 | http://localhost/openmrs | legacy admin UI (modules, global properties, scheduler) |
 
-Default account: **`admin` / `Admin123`**. This is public knowledge — **change it before
-the system holds any real data**, and before exposing it beyond this machine. After changing
-it, pass the new credentials to the smoke test (see [Testing](#testing)).
+Account: **`admin`**, with the password `OMRS_ADMIN_PASSWORD` from `.env` (applied when the
+database is created). There are no demo accounts. The smoke test reads the same password
+from `.env`.
 
 ## Daily operations
 
@@ -145,25 +163,25 @@ it, pass the new credentials to the smoke test (see [Testing](#testing)).
 and every change:
 
 ```bash
-./scripts/smoke-test.sh
-# after changing the admin password:
-OMRS_USER=admin OMRS_PASS='...' ./scripts/smoke-test.sh
+./scripts/smoke-test.sh      # uses "admin" and OMRS_ADMIN_PASSWORD from .env
 ```
 
 It checks: all containers running and healthy, the O3 UI and legacy UI respond, REST login,
-the core version, that every module started, the FHIR R4 endpoint, and the patient count.
-Right after a start the containers check can fail for up to 30 seconds while Docker's
-healthcheck catches up; run it again.
+the core version, that every module started, the FHIR R4 endpoint, the patient count, and
+our configuration (French by default, the CHU login locations and nothing from the demo, the
+69 wilayas, no demo users). Right after a start the containers check can fail for up to 30
+seconds while Docker's healthcheck catches up; run it again.
 
-### What was verified on 2026-09-26
+**Development machine only** (never on the hospital server):
 
-- Smoke test: all 8 checks pass, before and after a full `down` / `up`.
-- Through the REST API: register a patient (ID generated by idgen), start a visit, record
-  vitals (weight, height, temperature), book an appointment, find the patient by
-  identifier, and read the patient and observations back through FHIR.
-- Persistence: the test patient and its 3 observations were still there after recreating
-  all containers.
-- **Not yet verified:** clicking through the O3 user interface in a browser.
+```bash
+TEST_USER_PASSWORD='...' ./scripts/dev-create-test-users.sh   # one test user per role
+TEST_USER_PASSWORD='...' ./scripts/dev-test-roles.sh <patient uuid>   # 18 role checks
+```
+
+Test reports: [`docs/test-report-3.7.1.md`](docs/test-report-3.7.1.md) (stock distribution,
+2026-10-01) and [`docs/test-report-phase2.md`](docs/test-report-phase2.md) (our configuration,
+2026-10-10: smoke test, role checks, UI walk-through in Chrome).
 
 ## Backup and restore
 
@@ -238,7 +256,7 @@ Seen in the backend log on 3.7.1. None of these stop the system from working.
 | Log message | Meaning | Action |
 | --- | --- | --- |
 | `Temporary Store limit is 51200 mb, whilst the temporary data directory ... only has N mb` | The event module's embedded ActiveMQ has a default temp-store limit larger than the free disk, so it limits itself to what is available. | None now. Keep enough free disk. |
-| `Address hierarchy configuration file appears invalid, skipping ...` | The demo address configuration (Cambodia) is in a subfolder the loader does not read, so **no address hierarchy is loaded** (0 entries). | Later: provide our own Algerian hierarchy (wilaya / daïra / commune). |
+| `Address hierarchy configuration file appears invalid, skipping ...` | Seen with the **demo** configuration only (Cambodia, in a subfolder the loader did not read). | Fixed in phase 2: our Algerian hierarchy is loaded (see `docs/configuration.md`). |
 | `Attribute "moduleId" must be declared for element type "allow"` / `"signatures"` | XML validation noise from the legacy UI module's DWR configuration. | None. |
 | `Name 'PK_HL7_IN_ERROR' ignored for PRIMARY key` | MariaDB ignores custom primary-key names during schema creation. | None. |
 | `Email notification for tele-consultation not configured` (WARN) | Printed for each demo appointment; email is not set up. | None. |
@@ -280,9 +298,11 @@ As reported by the running system (`/openmrs/ws/rest/v1/module`); all 30 started
 | `teleconsultation` | Teleconsultation | 2.0.0 |
 | `webservices.rest` | Rest Web Services OMOD | 3.5.0 |
 
-**Demo data:** the 3.7.1 images always include the demo configuration and generate 50 fake
-patients on the first start. No `3.7.1-no-demo` image exists. A clean production setup
-(no demo patients, our own concepts and metadata) is a separate, later step.
+**No demo data.** The 3.7.1 images contain the demo configuration, but `docker-compose.yml`
+mounts our configuration folder over it, so the demo is never loaded. The
+`referencedemodata` module is still installed but stays idle: it only creates patients and
+demo users when a setting asks for it, and our configuration does not. See
+[`docs/configuration.md`](docs/configuration.md).
 
 ## Project layout
 
@@ -291,10 +311,24 @@ OpenMrs-EMR/
 ├── docker-compose.yml     # the stack (upstream + documented changes, images pinned by digest)
 ├── .env.example           # template for .env (secrets, port)
 ├── .env                   # real secrets - git-ignored, never commit
+├── config/                # OUR CONFIGURATION (see docs/configuration.md)
+│   ├── backend/           # Initializer domains, mounted over the image's demo configuration
+│   ├── frontend/          # O3 frontend config + logos
+│   └── NOTICE.md          # third-party content notices
 ├── scripts/
-│   ├── smoke-test.sh      # read-only health check
-│   └── fetch-sources.sh   # clones the OpenMRS source code (exact running versions) to ../openmrs-source
+│   ├── smoke-test.sh      # read-only health check (+ checks of our configuration)
+│   ├── fetch-sources.sh   # clones the OpenMRS source code (exact running versions) to ../openmrs-source
+│   ├── build-address-hierarchy.py  # generates the 69-wilaya address hierarchy CSV
+│   ├── dev-create-test-users.sh    # DEV ONLY: one test user per role
+│   └── dev-test-roles.sh           # DEV ONLY: checks what each role may and may not do
 ├── docs/
+│   ├── neurosurgery-o3-plan.md     # functional plan
+│   ├── configuration.md            # the configuration package
+│   ├── test-report-3.7.1.md        # UI test of the stock distribution
+│   ├── test-report-phase2.md       # test of our configuration (phase 2)
+│   ├── neurosurgery-forms.md       # neurosurgery forms and documents (for clinical review)
+│   ├── test-report-phase3.md       # test of the neurosurgery content (phase 3)
+│   ├── images/                     # screenshots of the test reports
 │   └── learning-path.md   # ordered official videos/courses, with time estimates
 ├── backups/               # local backups - git-ignored (contains patient data)
 ├── CLAUDE.md              # working rules for this repository
