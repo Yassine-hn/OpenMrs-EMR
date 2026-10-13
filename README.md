@@ -7,7 +7,8 @@ CHU Frantz Fanon, Blida**.
 **Current phase (3): neurosurgery content on the unchanged 3.7.1 images**, all by configuration:
 no demo data, CHU Blida locations, French by default, the 69-wilaya address hierarchy, our
 identifiers and roles (phase 2); neurosurgery forms with PDF printing on a CHU layout,
-Glasgow/Karnofsky trends, consultation services and queue, 42 beds (phase 3, in progress).
+Glasgow/Karnofsky trends, consultation services and queue, 42 beds, CIEL concepts and 34
+coded neurosurgical diagnoses with ICD-10 codes (phase 3, in progress).
 No custom code yet; imaging (Orthanc/OHIF) and new modules come in later phases.
 
 | Document | Content |

@@ -11,6 +11,7 @@ performed, side, type of anaesthesia, diagnoses. The other fields use local code
 
 | Form | Status | Prints as |
 | --- | --- | --- |
+| [Consultation de neurochirurgie](#consultation-de-neurochirurgie) | v1, to be validated | consultation report (PDF, CHU letterhead) |
 | [Compte rendu opératoire](#compte-rendu-opératoire) | v1, to be validated | operative report (PDF, CHU letterhead) |
 | [Évaluation neurologique](#évaluation-neurologique) | v1, to be validated | neurological examination (PDF); trends on the patient summary |
 | [Demande d'admission](#demande-dadmission) | v1 | starts an admission, handled by the nurses in *Admissions* |
@@ -26,6 +27,42 @@ Example: [page 1](images/phase3/compte-rendu-operatoire-exemple-1.png),
 [page 2](images/phase3/compte-rendu-operatoire-exemple-2.png) (test patient).
 
 Requires the privilege *App: Print encounter forms*, which all CHU roles have.
+
+## Consultation de neurochirurgie
+
+Encounter type *Consultation de neurochirurgie*. Filled by the neurosurgeon at the outpatient
+consultation (location *Consultations de neurochirurgie*). The printed report is the letter
+for the referring doctor and the patient's file:
+[example](images/phase3/consultation-neurochirurgie-exemple.png) (test patient).
+
+| Section | Field | Type | Choices |
+| --- | --- | --- | --- |
+| **Motif et histoire** | Adressé par | text | |
+| | Motif de consultation | text | |
+| | Histoire de la maladie | long text | |
+| | Antécédents médicaux et chirurgicaux | long text | |
+| | Traitement en cours | text | |
+| **Examen clinique** | Examen clinique et neurologique | long text | |
+| **Imagerie et examens** | Résultats d'imagerie (scanner, IRM…) | long text | |
+| **Diagnostic** | Diagnostic principal | **search in the diagnosis list** | see [Diagnoses](#diagnoses) |
+| | Certitude du diagnostic | choice | Confirmé, Présumé |
+| | Autres diagnostics / précisions | text | level, side, size… |
+| **Conduite à tenir** | Décision | several choices | Traitement médical, Indication opératoire posée, Surveillance clinique et radiologique, Examens complémentaires, Présentation en RCP, Hospitalisation, Orientation vers une autre spécialité |
+| | Intervention proposée | text | |
+| | Examens demandés | text | |
+| | Traitement prescrit | text | |
+| | Date du prochain rendez-vous | date | |
+| | Commentaires | text | |
+
+The structured neurological examination (Glasgow, pupils, strength) is not repeated here: it
+is the *Évaluation neurologique* form, which feeds the trends on the patient summary.
+
+Questions for the reviewer:
+- Is the order of the sections the one used in the department's letters?
+- Should the consultation also record a Glasgow score and a Karnofsky index directly?
+- Is "Décision" complete (e.g. physiotherapy, infiltration, pain clinic)?
+- The next appointment date is only written on the report; booking it is done in
+  *Rendez-vous*. Is that acceptable?
 
 ## Compte rendu opératoire
 

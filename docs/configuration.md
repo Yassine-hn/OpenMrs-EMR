@@ -47,7 +47,9 @@ obvious (exception: `addresshierarchy/`, see [Two loader details](#two-loader-de
 config/
 ├── backend/                      → Initializer domains
 │   ├── addresshierarchy/               69 wilayas > daïras > communes (files at the folder root)
-│   ├── concepts/                       vital signs, diagnosis framework, notes
+│   ├── concepts/                       upstream/adapted: vital signs, diagnosis framework, notes
+│   │   ├── chu-blida/                  our local neurosurgery concepts (source CHU-Blida)
+│   │   └── ciel/                       CIEL concepts we define: form questions, 34 diagnoses
 │   ├── ocl/upstream/1-concepts/        CIEL concept packages used by the stock screens
 │   ├── ocl/upstream/2-allergies/       the allergy set, loaded after them
 │   ├── locations/chu-blida/            CHU and neurosurgery units
@@ -118,7 +120,8 @@ The clinical content (concepts, forms, print layout) is described for clinicians
 | `concepts/chu-blida/02-…-questions-….csv` | local question concepts, one file per form (`_order:1100`) |
 | `concepts/ciel/ciel-neurochirurgie.csv` | **CIEL concepts** used by the forms that are not in the `ocl` packages, defined with their CIEL UUID, names and `CIEL:<id>` mapping (`_order:1200`, after the local files, see below) |
 | `concepts/ciel/ciel-diagnostics-neurochirurgie.csv` | **34 neurosurgical diagnoses** from CIEL that the `ocl` diagnosis package lacks (subdural haematomas, hydrocephalus, brain and spinal tumours, aneurysms, disc herniations, Chiari…), with their ICD-10 codes and a French synonym where the clinical term differs (see below) |
-| `encountertypes/chu-blida/` | one encounter type per document (e.g. "Compte rendu opératoire") |
+| `concepts/chu-blida/04-…-questions-consultation.csv` | local questions of the consultation form (`_order:1100`). Checked in OCL: CIEL has no text equivalent for *Adressé par*, *Traitement en cours*, *Intervention proposée*, *Examens demandés*, *Traitement prescrit* (its "Tests ordered" 1271 is coded); *Décision* could later use CIEL 166937 "Care management plan", which has no answers in CIEL |
+| `encountertypes/chu-blida/` | one encounter type per document (e.g. "Compte rendu opératoire"). From the consultation on, the code behind each UUID is recorded: *Consultation de neurochirurgie* = `NCH-ET-CONSULT` |
 | `ampathforms/chu-blida/` | the Form Builder forms (O3 JSON). Initializer derives the form's UUID itself (from name and version); the `uuid` field in the file is ignored |
 | `printing/chu-blida-encounter.xsl` | the **CHU print layout** for "Imprimer cette consultation". Not an Initializer domain: copied with the rest to `/openmrs/data/configuration/printing/`, and referenced by `encounterPrinting.json` (`stylesheetPath`) |
 
@@ -185,7 +188,13 @@ one line and long texts as blocks with their line breaks; a signature box; foote
   text until the official logo is available;
 - the module writes "Printed by <name>", but the PDF is rendered by a background task running
   as the system user, so the layout prints only the date;
-- printing applies to **Form Builder forms only**.
+- printing applies to **Form Builder forms only**, and prints **observation fields only**: a form
+  field of type `diagnosis` (which records a visit diagnosis instead of an observation) would
+  not appear on the PDF. So the consultation records its diagnosis as a coded observation
+  (CIEL 1284, with certainty CIEL 159394), like the operative report;
+- a date answer comes from the module as `YYYY-MM-DD`; the layout prints it as `DD/MM/YYYY`;
+- texts written as `markdown` in a form are printed too, so a form must not contain on-screen
+  hints.
 
 ### Clinic, queue and beds (phase 3)
 

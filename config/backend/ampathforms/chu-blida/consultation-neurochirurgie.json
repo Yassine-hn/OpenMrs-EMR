@@ -1,0 +1,251 @@
+{
+  "uuid": "4f88dc86-6b6f-5219-9200-8c711a8bbd37",
+  "name": "Consultation de neurochirurgie",
+  "description": "Consultation spécialisée de neurochirurgie (version 1, à valider par le service)",
+  "version": "1",
+  "published": true,
+  "retired": false,
+  "encounter": "Consultation de neurochirurgie",
+  "processor": "EncounterFormProcessor",
+  "referencedForms": [],
+  "pages": [
+    {
+      "label": "Consultation",
+      "sections": [
+        {
+          "label": "Motif et histoire",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Adressé par",
+              "type": "obs",
+              "id": "adresse",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "02e7743b-67e7-5b9a-ba4b-2a1fe7272f6b"
+              }
+            },
+            {
+              "label": "Motif de consultation",
+              "type": "obs",
+              "id": "motif",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "160531AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 2
+              }
+            },
+            {
+              "label": "Histoire de la maladie",
+              "type": "obs",
+              "id": "hdm",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "1390AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 5
+              }
+            },
+            {
+              "label": "Antécédents médicaux et chirurgicaux",
+              "type": "obs",
+              "id": "atcd",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "160221AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 3
+              }
+            },
+            {
+              "label": "Traitement en cours",
+              "type": "obs",
+              "id": "trtcours",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "6c9cf5be-b3a9-5dec-803e-d70f768b9eba",
+                "rows": 2
+              }
+            }
+          ]
+        },
+        {
+          "label": "Examen clinique",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Examen clinique et neurologique",
+              "type": "obs",
+              "id": "examen",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "1391AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 6
+              }
+            }
+          ]
+        },
+        {
+          "label": "Imagerie et examens",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Résultats d'imagerie (scanner, IRM…)",
+              "type": "obs",
+              "id": "imagerie",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "1392AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 4
+              }
+            }
+          ]
+        },
+        {
+          "label": "Diagnostic",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Diagnostic principal",
+              "type": "obs",
+              "id": "dxPrincipal",
+              "questionOptions": {
+                "rendering": "ui-select-extended",
+                "concept": "1284AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "isSearchable": true,
+                "datasource": {
+                  "name": "problem_datasource",
+                  "config": {
+                    "class": [
+                      "8d4918b0-c2cc-11de-8d13-0010c6dffd0f"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "label": "Certitude du diagnostic",
+              "type": "obs",
+              "id": "dxCertitude",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "159394AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "answers": [
+                  {
+                    "concept": "159392AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Confirmé"
+                  },
+                  {
+                    "concept": "159393AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Présumé"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Autres diagnostics / précisions",
+              "type": "obs",
+              "id": "dxAutres",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "159395AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 2
+              }
+            }
+          ]
+        },
+        {
+          "label": "Conduite à tenir",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Décision",
+              "type": "obs",
+              "id": "cat",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "a8424058-df20-537e-9047-3a7a04d2137a",
+                "answers": [
+                  {
+                    "concept": "a3d6a46e-7ae5-5ae2-ac76-402f06d32648",
+                    "label": "Traitement médical"
+                  },
+                  {
+                    "concept": "4ae04a72-1a5f-5326-a149-433e7bd67d94",
+                    "label": "Indication opératoire posée"
+                  },
+                  {
+                    "concept": "2f95594a-fa96-55ac-990b-bd2f797aac76",
+                    "label": "Surveillance clinique et radiologique"
+                  },
+                  {
+                    "concept": "dd626ca4-0c06-5cc2-a215-2529933c963a",
+                    "label": "Examens complémentaires"
+                  },
+                  {
+                    "concept": "37d59667-6803-5567-9f96-389b26e6cde6",
+                    "label": "Présentation en RCP"
+                  },
+                  {
+                    "concept": "c5300fcb-996d-51d0-be6b-450cd34e1b62",
+                    "label": "Hospitalisation"
+                  },
+                  {
+                    "concept": "af69d7a6-9603-5c28-9c72-89786dd6f746",
+                    "label": "Orientation vers une autre spécialité"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Intervention proposée",
+              "type": "obs",
+              "id": "intprop",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "17785fd9-2970-5b07-a48a-5d0afc3da5e9"
+              }
+            },
+            {
+              "label": "Examens demandés",
+              "type": "obs",
+              "id": "exdem",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "0deece63-ebe5-5575-a51d-32c02263cc3a",
+                "rows": 2
+              }
+            },
+            {
+              "label": "Traitement prescrit",
+              "type": "obs",
+              "id": "trtpresc",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "24193fbf-35ab-54a1-824b-8512c0c4d739",
+                "rows": 3
+              }
+            },
+            {
+              "label": "Date du prochain rendez-vous",
+              "type": "obs",
+              "id": "rdv",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
+              "label": "Commentaires",
+              "type": "obs",
+              "id": "comment",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "161011AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

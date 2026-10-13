@@ -21,6 +21,7 @@
 | French translation overrides | PASS: printing menu, forms tab, notes, procedures, ward |
 | Switch of 4 questions and 6 answers to **CIEL concepts** (2026-10-11) | PASS: forms saved and printed with the CIEL codes; Glasgow calculation and trend still work |
 | **Coded diagnoses** in the operative report: 34 neurosurgical CIEL diagnoses with ICD-10 (2026-10-11) | PASS: search in French and English, saved, printed; also found by the visit note's search |
+| Form **Consultation de neurochirurgie** (2026-10-13) | PASS: filled in the browser and through the API, saved, printed (1 page) |
 | Smoke test (12 checks), role checks (18 checks) | PASS after all changes |
 
 ## 2. Details
@@ -100,6 +101,24 @@ What changed is in [`configuration.md`](configuration.md#neurosurgery-content-ph
 - Role checks PASS. The smoke test reported a failure once, right after a restart (which
   check was not captured); the next 4 runs passed.
 
+### Consultation de neurochirurgie (2026-10-13)
+
+- Loaded: encounter type, form, 6 local questions and 7 answers (*Décision*).
+- Saved through the REST API as test-medecin, the way the form engine saves (form, encounter
+  type, visit, location *Consultations de neurochirurgie*, provider), with every kind of field:
+  texts, the coded diagnosis (lumbar disc herniation), certainty, 2 decisions, a date → 201.
+- Printed as test-medecin: 1 page, all fields in order, the 2 decisions joined by a comma,
+  [rendered page](images/phase3/consultation-neurochirurgie-exemple.png).
+- Found: the appointment date printed as "2026-10-27" → the layout now prints "27/10/2026".
+  The operative report was printed again after this change: unchanged.
+- Smoke test and role checks: PASS.
+- **In the browser** (test-medecin at *Consultations de neurochirurgie*, after Chrome was
+  reconnected): all 16 fields shown in French; "méningiome" in *Diagnostic principal* offered
+  *Méningiome intracrânien* and *Méningiome spinal*; certainty *Présumé*; 2 decisions ticked;
+  the date field shows "jj/mm/aaaa" and is filled with its calendar (typing the date did not
+  fill it); saved. Printed: "Certitude du diagnostic : Présumé", "Décision : Présentation en
+  RCP, Examens complémentaires", "Date du prochain rendez-vous : 03/11/2026".
+
 ## 3. Problems found and fixed
 
 | Problem | Cause | Fix |
@@ -108,6 +127,7 @@ What changed is in [`configuration.md`](configuration.md#neurosurgery-content-ph
 | Admission done but bed not assigned (`403` on `POST /beds/1`) | the bed module requires *Assign Beds* **and** *Edit Admission Locations*; the nurse role had only the first | *Edit Admission Locations* added to the nurse role |
 | English labels (print menu, forms tab, notes, procedures, ward totals) | missing French translations in O3 | translation overrides in the frontend config |
 | "Printed by Super User" in the PDF footer | background rendering as the system user | the layout prints the date only |
+| Appointment date printed as "2026-10-27" | the module gives dates as `YYYY-MM-DD` | the layout converts them to `DD/MM/YYYY` |
 | Diagnosis search box showed no results when typing | the field needs `"isSearchable": true`, otherwise it loads one fixed list | added to both diagnosis fields |
 
 ## 4. Still open

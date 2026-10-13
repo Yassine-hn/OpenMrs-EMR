@@ -170,7 +170,15 @@
             <xsl:when test="string-length(normalize-space(.)) &lt;= 60 and not(contains(., '&#10;'))">
                 <fo:block margin-left="2mm" space-after="1.2mm" font-size="10pt">
                     <fo:inline font-size="9pt" font-weight="bold" color="#333"><xsl:value-of select="@label"/> : </fo:inline>
-                    <xsl:value-of select="normalize-space(.)"/>
+                    <xsl:variable name="v" select="normalize-space(.)"/>
+                    <xsl:choose>
+                        <!-- a date answer comes as YYYY-MM-DD: print it as DD/MM/YYYY -->
+                        <xsl:when test="string-length($v) = 10 and substring($v, 5, 1) = '-' and substring($v, 8, 1) = '-'
+                                        and translate($v, '0123456789', '') = '--'">
+                            <xsl:value-of select="concat(substring($v, 9, 2), '/', substring($v, 6, 2), '/', substring($v, 1, 4))"/>
+                        </xsl:when>
+                        <xsl:otherwise><xsl:value-of select="$v"/></xsl:otherwise>
+                    </xsl:choose>
                 </fo:block>
             </xsl:when>
             <xsl:otherwise>

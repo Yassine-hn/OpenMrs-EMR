@@ -1,0 +1,7 @@
+Uuid,Void/Retire,Same as mappings,Fully specified name:en,Fully specified name:fr,Short name:en,Short name:fr,Description:en,Description:fr,Data class,Data type,Answers,Members,Absolute low,Absolute high,Units,Allow decimals,_version:1,_order:1100
+02e7743b-67e7-5b9a-ba4b-2a1fe7272f6b,,CHU-Blida:NCH-Q-ADRESSE,Referred by,Adressé par,,,,,Question,Text,,,,,,,,
+6c9cf5be-b3a9-5dec-803e-d70f768b9eba,,CHU-Blida:NCH-Q-TRTCOURS,Current treatment,Traitement en cours,,,,,Question,Text,,,,,,,,
+a8424058-df20-537e-9047-3a7a04d2137a,,CHU-Blida:NCH-Q-CAT,Management plan,Conduite à tenir,,,,,Question,Coded,a3d6a46e-7ae5-5ae2-ac76-402f06d32648;4ae04a72-1a5f-5326-a149-433e7bd67d94;2f95594a-fa96-55ac-990b-bd2f797aac76;dd626ca4-0c06-5cc2-a215-2529933c963a;37d59667-6803-5567-9f96-389b26e6cde6;c5300fcb-996d-51d0-be6b-450cd34e1b62;af69d7a6-9603-5c28-9c72-89786dd6f746,,,,,,,
+17785fd9-2970-5b07-a48a-5d0afc3da5e9,,CHU-Blida:NCH-Q-INTPROP,Proposed procedure,Intervention proposée,,,,,Question,Text,,,,,,,,
+0deece63-ebe5-5575-a51d-32c02263cc3a,,CHU-Blida:NCH-Q-EXDEM,Tests requested,Examens demandés,,,,,Question,Text,,,,,,,,
+24193fbf-35ab-54a1-824b-8512c0c4d739,,CHU-Blida:NCH-Q-TRTPRESC,Treatment prescribed,Traitement prescrit,,,,,Question,Text,,,,,,,,

@@ -1,3 +1,4 @@
 Uuid,Void/Retire,Name,Description,View privilege,Edit privilege,_order:1000
 d0376b3b-cda1-58c5-9789-afe910505c5f,,Compte rendu opératoire,Compte rendu d'une intervention neurochirurgicale,,,
 dab408eb-1e20-5304-8b73-fd54b695b944,,Évaluation neurologique,"Examen neurologique structuré : Glasgow, pupilles, motricité, échelles fonctionnelles",,,
+1f331153-e484-554a-9184-1d45a2399166,,Consultation de neurochirurgie,"Consultation spécialisée de neurochirurgie : motif, examen, diagnostic, conduite à tenir",,
