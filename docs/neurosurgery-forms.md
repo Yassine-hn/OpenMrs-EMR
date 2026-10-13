@@ -12,6 +12,7 @@ performed, side, type of anaesthesia, diagnoses. The other fields use local code
 | Form | Status | Prints as |
 | --- | --- | --- |
 | [Consultation de neurochirurgie](#consultation-de-neurochirurgie) | v1, to be validated | consultation report (PDF, CHU letterhead) |
+| [Observation d'entrée](#observation-dentrée) | v1, to be validated | admission note (PDF, CHU letterhead) |
 | [Compte rendu opératoire](#compte-rendu-opératoire) | v1, to be validated | operative report (PDF, CHU letterhead) |
 | [Évaluation neurologique](#évaluation-neurologique) | v1, to be validated | neurological examination (PDF); trends on the patient summary |
 | [Demande d'admission](#demande-dadmission) | v1 | starts an admission, handled by the nurses in *Admissions* |
@@ -63,6 +64,40 @@ Questions for the reviewer:
 - Is "Décision" complete (e.g. physiotherapy, infiltration, pain clinic)?
 - The next appointment date is only written on the report; booking it is done in
   *Rendez-vous*. Is that acceptable?
+
+## Observation d'entrée
+
+Encounter type *Observation d'entrée*. The doctor's admission note, written when the patient
+arrives in a ward (after the admission itself, which the nurse records in *Admissions*).
+[Example](images/phase3/observation-entree-exemple.png) (test patient).
+
+| Section | Field | Type | Choices |
+| --- | --- | --- | --- |
+| **Admission** | Mode d'admission | choice | Par les urgences, Admission programmée, Transfert d'un autre service, Transfert d'un autre établissement |
+| | Établissement ou service d'origine | text | |
+| | Motif d'hospitalisation | text | |
+| **Histoire** | Histoire de la maladie | long text | |
+| | Antécédents médicaux et chirurgicaux | long text | |
+| | Traitement en cours | text | |
+| **Examen à l'entrée** | Examen clinique et neurologique | long text | |
+| **Imagerie et examens** | Résultats d'imagerie (scanner, IRM…) | long text | |
+| **Diagnostic d'entrée** | Diagnostic principal | **search in the diagnosis list** | see [Diagnoses](#diagnoses) |
+| | Certitude du diagnostic | choice | Confirmé, Présumé |
+| | Autres diagnostics / précisions | text | |
+| **Projet thérapeutique** | Projet thérapeutique | long text | |
+| | Intervention prévue | text | |
+| | Examens demandés | text | |
+| | Consignes de surveillance et de soins | long text | for the nurses |
+
+The Glasgow score, pupils and strength on arrival are recorded with *Évaluation neurologique*
+(trends on the patient summary).
+
+Questions for the reviewer:
+- Is a separate admission note needed when the patient was seen in consultation just before
+  (the history is then written twice)?
+- Should the mode of admission include "Transfert depuis la réanimation"?
+- Should the nursing instructions be a structured list (frequency of neurological checks,
+  position, drains) rather than free text?
 
 ## Compte rendu opératoire
 

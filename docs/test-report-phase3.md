@@ -22,6 +22,7 @@
 | Switch of 4 questions and 6 answers to **CIEL concepts** (2026-10-11) | PASS: forms saved and printed with the CIEL codes; Glasgow calculation and trend still work |
 | **Coded diagnoses** in the operative report: 34 neurosurgical CIEL diagnoses with ICD-10 (2026-10-11) | PASS: search in French and English, saved, printed; also found by the visit note's search |
 | Form **Consultation de neurochirurgie** (2026-10-13) | PASS: filled in the browser and through the API, saved, printed (1 page) |
+| Form **Observation d'entrée** (2026-10-13) | PASS: filled in the browser, saved, printed (1 page); no extra admission created |
 | Smoke test (12 checks), role checks (18 checks) | PASS after all changes |
 
 ## 2. Details
@@ -118,6 +119,18 @@ What changed is in [`configuration.md`](configuration.md#neurosurgery-content-ph
   the date field shows "jj/mm/aaaa" and is filled with its calendar (typing the date did not
   fill it); saved. Printed: "Certitude du diagnostic : Présumé", "Décision : Présentation en
   RCP, Examens complémentaires", "Date du prochain rendez-vous : 03/11/2026".
+
+### Observation d'entrée (2026-10-13)
+
+- Loaded: encounter type, form, 4 CIEL text questions defined by us (162879 motif d'admission,
+  161550 établissement d'origine, 163104 plan de traitement, 166021 plan de soins infirmiers),
+  1 local question (*Mode d'admission*, 4 answers); the other fields reuse the consultation's.
+- In the browser (test-medecin at *Neurochirurgie - Hommes*): form listed ("Jamais"), all
+  fields shown; mode *Transfert d'un autre établissement*, texts, "sous-dural chronique" →
+  *Hématome sous-dural intracrânien chronique*, *Confirmé*; saved: 12 values stored. Only one
+  encounter was created, of type *Observation d'entrée* (no second admission).
+- Printed: 1 page, [rendered page](images/phase3/observation-entree-exemple.png).
+- Smoke test and role checks: PASS.
 
 ## 3. Problems found and fixed
 

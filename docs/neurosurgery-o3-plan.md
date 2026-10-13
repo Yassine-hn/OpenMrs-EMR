@@ -270,9 +270,8 @@ PDF with the CHU letterhead.
   and 6 answers switched to CIEL concepts (the rest has no exact CIEL equivalent); coded
   pre/post-operative diagnoses with 34 neurosurgical CIEL diagnoses (ICD-10 codes, French
   synonyms), also available in the visit note; *Consultation de neurochirurgie* form with a
-  printed consultation report (2026-10-13).
-- **Remaining:** the other forms (admission context, pathology WHO CNS5, MDT decision,
-  follow-up); the services'
+  printed consultation report and *Observation d'entrée* (admission note) (2026-10-13).
+- **Remaining:** the other forms (pathology WHO CNS5, MDT decision, follow-up); the services'
   weekly days; the relative-time translation; clinical review of the forms.
 
 Repository layout from Phase 2 on: `config/` (Initializer, frontend config, print

@@ -1,0 +1,236 @@
+{
+  "uuid": "657d6e68-038f-5beb-948a-a9a8bb02e747",
+  "name": "Observation d'entrée",
+  "description": "Observation médicale d'entrée en hospitalisation de neurochirurgie (version 1, à valider par le service)",
+  "version": "1",
+  "published": true,
+  "retired": false,
+  "encounter": "Observation d'entrée",
+  "processor": "EncounterFormProcessor",
+  "referencedForms": [],
+  "pages": [
+    {
+      "label": "Observation d'entrée",
+      "sections": [
+        {
+          "label": "Admission",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Mode d'admission",
+              "type": "obs",
+              "id": "modeAdm",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "ccd3bf29-8ad9-5859-8565-873c7e06c897",
+                "answers": [
+                  {
+                    "concept": "912d1495-b481-5190-b84c-4241d2ee9470",
+                    "label": "Par les urgences"
+                  },
+                  {
+                    "concept": "bea05c5c-1864-5b0f-8ebf-246b5df445d4",
+                    "label": "Admission programmée"
+                  },
+                  {
+                    "concept": "5026972a-5b60-5984-a799-07d516366529",
+                    "label": "Transfert d'un autre service"
+                  },
+                  {
+                    "concept": "a752f123-795a-5eaf-b4a9-9e169c210cc2",
+                    "label": "Transfert d'un autre établissement"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Établissement ou service d'origine",
+              "type": "obs",
+              "id": "origine",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "161550AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
+              "label": "Motif d'hospitalisation",
+              "type": "obs",
+              "id": "motifHosp",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "162879AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 2
+              }
+            }
+          ]
+        },
+        {
+          "label": "Histoire",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Histoire de la maladie",
+              "type": "obs",
+              "id": "hdm",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "1390AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 5
+              }
+            },
+            {
+              "label": "Antécédents médicaux et chirurgicaux",
+              "type": "obs",
+              "id": "atcd",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "160221AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 3
+              }
+            },
+            {
+              "label": "Traitement en cours",
+              "type": "obs",
+              "id": "trtcours",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "6c9cf5be-b3a9-5dec-803e-d70f768b9eba",
+                "rows": 2
+              }
+            }
+          ]
+        },
+        {
+          "label": "Examen à l'entrée",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Examen clinique et neurologique",
+              "type": "obs",
+              "id": "examen",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "1391AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 6
+              }
+            }
+          ]
+        },
+        {
+          "label": "Imagerie et examens",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Résultats d'imagerie (scanner, IRM…)",
+              "type": "obs",
+              "id": "imagerie",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "1392AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 4
+              }
+            }
+          ]
+        },
+        {
+          "label": "Diagnostic d'entrée",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Diagnostic principal",
+              "type": "obs",
+              "id": "dxPrincipal",
+              "questionOptions": {
+                "rendering": "ui-select-extended",
+                "concept": "1284AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "isSearchable": true,
+                "datasource": {
+                  "name": "problem_datasource",
+                  "config": {
+                    "class": [
+                      "8d4918b0-c2cc-11de-8d13-0010c6dffd0f"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "label": "Certitude du diagnostic",
+              "type": "obs",
+              "id": "dxCertitude",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "159394AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "answers": [
+                  {
+                    "concept": "159392AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Confirmé"
+                  },
+                  {
+                    "concept": "159393AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Présumé"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Autres diagnostics / précisions",
+              "type": "obs",
+              "id": "dxAutres",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "159395AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 2
+              }
+            }
+          ]
+        },
+        {
+          "label": "Projet thérapeutique",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Projet thérapeutique",
+              "type": "obs",
+              "id": "projet",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "163104AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 3
+              }
+            },
+            {
+              "label": "Intervention prévue",
+              "type": "obs",
+              "id": "intprop",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "17785fd9-2970-5b07-a48a-5d0afc3da5e9"
+              }
+            },
+            {
+              "label": "Examens demandés",
+              "type": "obs",
+              "id": "exdem",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "0deece63-ebe5-5575-a51d-32c02263cc3a",
+                "rows": 2
+              }
+            },
+            {
+              "label": "Consignes de surveillance et de soins",
+              "type": "obs",
+              "id": "consignes",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "166021AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

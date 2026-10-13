@@ -11,3 +11,7 @@ Uuid,Void/Retire,Same as mappings,Fully specified name:en,Fully specified name:f
 160347AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:160347,Glasgow coma scale,Échelle de coma de glasgow,Finding,Numeric,,0,15,,false,,
 163034AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:163034,Pre-Op diagnosis,Diagnostic préopératoire,Question,Coded,,,,,,,
 163035AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:163035,Post-Op diagnosis,Diagnostic postopératoire,Question,Coded,,,,,,,
+162879AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:162879,Reason for admission (text),Motif d'admission (texte),Question,Text,,,,,,,
+161550AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:161550,Referring facility name,Nom de l'établissement d'orientation,Misc,Text,,,,,,,
+163104AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:163104,Treatment plan (text),Plan de traitement,Question,Text,,,,,,,
+166021AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:166021,Nursing care plan,Plan de soins infirmiers,Question,Text,,,,,,,
