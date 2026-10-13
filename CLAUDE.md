@@ -13,7 +13,7 @@ data migration. The plan is `docs/neurosurgery-o3-plan.md`.
 - **Phase 2 (done 2026-10-10):** our own configuration replaces the demo configuration
   (`config/`, see `docs/configuration.md`). Same 3.7.1 images. No custom code.
 - **Phase 3 (current):** neurosurgery content by configuration: forms + CHU print layout,
-  concepts (local `CHU-Blida` source until CIEL mapping), clinic services and queue, beds
+  concepts (CIEL where it has them, otherwise the local `CHU-Blida` source), clinic services and queue, beds
   (see `docs/neurosurgery-forms.md`, `docs/test-report-phase3.md`).
 - **Later phases:** Orthanc + OHIF and new modules written from scratch in this repo. Each
   phase is planned before it starts.

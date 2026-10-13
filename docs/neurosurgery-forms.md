@@ -6,6 +6,8 @@ reviewed by a neurosurgeon of the department before real use.** Comments and cor
 be made directly in this document.
 
 How it is built (concepts, files, print layout): see [`configuration.md`](configuration.md).
+Where an international code exists (CIEL), the field uses it: Glasgow total, procedure
+performed, side, type of anaesthesia, diagnoses. The other fields use local codes of the CHU.
 
 | Form | Status | Prints as |
 | --- | --- | --- |
@@ -36,12 +38,14 @@ the *Bloc opératoire* location.
 | | Caractère de l'intervention | choice | Programmée, Urgente |
 | | Côté | choice | Droit, Gauche, Bilatéral, Médian, Non applicable |
 | | Indication opératoire | text | |
-| | Diagnostic pré-opératoire | text | |
-| | Diagnostic post-opératoire | text | |
+| | Diagnostic pré-opératoire | **search in the diagnosis list** | see [Diagnoses](#diagnoses) |
+| | Diagnostic pré-opératoire - précisions | text | side, size, details |
+| | Diagnostic post-opératoire | **search in the diagnosis list** | |
+| | Diagnostic post-opératoire - précisions | text | |
 | **Équipe et anesthésie** | Opérateur(s) | text | |
 | | Aide(s) opératoire(s) | text | |
 | | Anesthésiste | text | |
-| | Type d'anesthésie | choice | Anesthésie générale, locale, locorégionale, Sédation |
+| | Type d'anesthésie | choice | Anesthésie générale, locale, locorégionale, Sédation intraveineuse |
 | **Technique opératoire** | Installation du patient | choice | Décubitus dorsal, ventral, latéral, Position assise, Autre |
 | | Voie d'abord | text | |
 | | Neuronavigation | Oui / Non | |
@@ -59,12 +63,37 @@ the *Bloc opératoire* location.
 | | Consignes post-opératoires | long text | |
 
 Questions for the reviewer:
-- Should the procedure and the diagnoses be **coded** (list of neurosurgical procedures,
-  ICD-10 diagnoses) instead of free text? Coding makes statistics possible (operations by type),
+- The diagnoses are now coded (see [Diagnoses](#diagnoses)). Should the **procedure** be coded
+  too (list of neurosurgical procedures)? It makes statistics by type of operation possible,
   but needs an agreed list.
 - Should the team be selected from the list of staff instead of typed?
 - Missing fields: duration of the operation, ASA score, antibiotic prophylaxis, blood loss
   categories, specific implants (shunt valve type and setting, spinal hardware)?
+
+## Diagnoses
+
+Diagnoses are searched by name, in French or English: type a few letters ("hémat",
+"méningiome", "hernie discale") and choose. The list holds the general diagnoses of the CIEL
+dictionary (about 2,200, including head injury, epidural and intracerebral haemorrhage,
+subarachnoid haemorrhage, spinal fractures, cerebral abscess, epilepsy, spondylolisthesis) and
+34 neurosurgical diagnoses added for the department. Each has an ICD-10 code. The same list is
+used by the diagnosis search of the visit note.
+
+| Group | Diagnoses added (French name; *search also by*) |
+| --- | --- |
+| Trauma and haematomas | Hématome sous-dural intracrânien chronique; Hématome sous-dural intracrânien traumatique; Fracture du crâne |
+| Hydrocephalus and CSF | Hydrocéphalie; Hydrocéphalie obstructive; Dysfonctionnement d'une dérivation ventriculaire cérébrale (*valve*); Écoulement du liquide céphalorachidien (*fuite de liquide cérébrospinal*) |
+| Tumours | Glioblastome multiforme cérébral; Gliome cérébral; Méningiome intracrânien; Méningiome spinal; Adénome hypophysaire; Neurinome acoustique (*schwannome vestibulaire*); Tumeur maligne secondaire de l'encéphale (*métastase cérébrale*); Médulloblastome; Craniopharyngiome; Néoplasme de la moelle épinière (*tumeur médullaire*) |
+| Vascular | Anévrisme intracrânien (*anévrisme cérébral*); Anévrisme cérébral rompu; Malformation artérioveineuse des vaisseaux cérébraux |
+| Spine | Prolapsus du disque intervertébral lombaire (*hernie discale lombaire*); Hernie discale cervicale; Sténose spinale de la région lombaire (*canal lombaire étroit*); Spondylose cervicale avec myélopathie (*myélopathie cervicarthrosique*); Compression médullaire; Syndrome de la queue de cheval |
+| Malformations | Malformation d'Arnold-Chiari, type I; Spina bifida; Syringomyélie; Syndrome de craniosynostose (*craniosténose*) |
+| Infections | Abcès intracrânien sous-dural (*empyème sous-dural*); Discite infectieuse (*spondylodiscite*); Tuberculose vertébrale (*mal de Pott*) |
+| Other | Névralgie du trijumeau |
+
+Questions for the reviewer:
+- Which frequent diagnoses of the department are missing? (Cavernoma is not in the CIEL
+  dictionary; it can be added as a local diagnosis.)
+- Are the French names acceptable, or should more usual terms be added?
 
 ## Évaluation neurologique
 

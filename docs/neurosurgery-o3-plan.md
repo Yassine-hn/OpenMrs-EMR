@@ -261,16 +261,18 @@ Carried over to phase 3:
 Phase 3 then starts with the **print spike (B1)**: a sample operative report printed as a
 PDF with the CHU letterhead.
 
-**Phase 3 progress (2026-10-10):** details in [`test-report-phase3.md`](test-report-phase3.md).
+**Phase 3 progress (2026-10-10, 2026-10-11):** details in [`test-report-phase3.md`](test-report-phase3.md).
 - **Done and tested:** the print spike (operative report → PDF on the CHU layout); forms
   *Compte rendu opératoire*, *Évaluation neurologique* (calculated Glasgow total) and
   *Demande d'admission*; Glasgow/Karnofsky and pupils/motor trends on the patient summary;
   3 consultation services; consultation queue with French statuses; 42 beds in 3 wards;
-  admission to a bed; French translation overrides.
-- **Remaining:** the other forms (consultation, admission context, neurosurgical diagnosis,
-  pathology WHO CNS5, MDT decision, follow-up); the OCL/CIEL mapping of the local concepts
-  (with your OCL account); the services' weekly days; the relative-time translation; clinical
-  review of the forms.
+  admission to a bed; French translation overrides; CIEL mapping checked in OCL, 4 questions
+  and 6 answers switched to CIEL concepts (the rest has no exact CIEL equivalent); coded
+  pre/post-operative diagnoses with 34 neurosurgical CIEL diagnoses (ICD-10 codes, French
+  synonyms), also available in the visit note.
+- **Remaining:** the other forms (consultation, admission context, pathology WHO CNS5, MDT
+  decision, follow-up); the services'
+  weekly days; the relative-time translation; clinical review of the forms.
 
 Repository layout from Phase 2 on: `config/` (Initializer, frontend config, print
 layout), later `gateway/`, `modules/esm-neuro-imaging-app/` and `orthanc/`. One place,

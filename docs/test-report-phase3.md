@@ -2,7 +2,7 @@
 
 | | |
 | --- | --- |
-| Date | 2026-10-10 |
+| Date | 2026-10-10, 2026-10-11 |
 | System | Local stack, O3 3.7.1 with our configuration (`config/`), same database as the phase 2 test |
 | Method | REST/FHIR checks, the real UI in Chrome (Claude in Chrome), PDFs checked with `pdftotext` and rendered with `pdftoppm` |
 | Users | `test-secretariat`, `test-infirmier`, `test-medecin` (development only) |
@@ -19,6 +19,8 @@
 | Appointment services and the consultation queue | PASS: appointment booked, patient queued, statuses in French |
 | Beds (42 in 3 wards) and **admission to a bed** | PASS after a role fix (see §3) |
 | French translation overrides | PASS: printing menu, forms tab, notes, procedures, ward |
+| Switch of 4 questions and 6 answers to **CIEL concepts** (2026-10-11) | PASS: forms saved and printed with the CIEL codes; Glasgow calculation and trend still work |
+| **Coded diagnoses** in the operative report: 34 neurosurgical CIEL diagnoses with ICD-10 (2026-10-11) | PASS: search in French and English, saved, printed; also found by the visit note's search |
 | Smoke test (12 checks), role checks (18 checks) | PASS after all changes |
 
 ## 2. Details
@@ -66,6 +68,38 @@ As the secretary (API): post-operative appointment at D+7 booked; patient added 
    (see §3).
 5. After the fix: [patient in bed H-01](images/phase3/salle-patient-au-lit-H-01.jpg), 17 free beds.
 
+### CIEL concepts (2026-10-11)
+
+What changed is in [`configuration.md`](configuration.md#neurosurgery-content-phase-3)
+(*CIEL mapping*). Checks after the restart:
+- **Database:** the 10 CIEL concepts exist with their CIEL UUID, French and English names and
+  `CIEL:<id>` mapping; laterality has 5 answers and anaesthesia type 4; the Glasgow total is
+  numeric 0–15 without decimals. The 10 replaced local concepts are retired.
+- **Évaluation neurologique** (UI, test-medecin): Y4 + V5 + M6 gave **15**, V changed to 4 gave
+  **14**; saved; the total is stored on CIEL 160347 and the *Glasgow et Karnofsky* widget
+  shows 14 "Aujourd'hui". The two earlier test evaluations are not in the Glasgow trend any
+  more: they were recorded on the retired local concept (test data only).
+- **Compte rendu opératoire** (UI): the 5 sides and 4 anaesthesia types are shown; saved with
+  *Gauche* (CIEL 5139) and *Anesthésie générale* (CIEL 161909); printed to PDF (1 page,
+  "Côté : Gauche", "Type d'anesthésie : Anesthésie générale").
+- Smoke test and role checks: PASS.
+
+### Coded diagnoses (2026-10-11)
+
+- **Database:** 34 diagnoses loaded (class Diagnosis), each with its CIEL mapping and, except
+  the shunt malfunction, ICD-10 codes with CIEL's relation (e.g. Hydrocéphalie = G91.9,
+  Hématome sous-dural chronique narrower than I62.0); 14 French synonyms.
+- **Form** (UI, test-medecin): the two diagnosis fields show a search box; "hématome" offered
+  the two subdural haematomas, "subdural" (English) also found them; saved: CIEL 163034 and
+  163035 = CIEL 155568, plus the "précisions" text.
+- **Print** (as test-medecin): "Diagnostic pré-opératoire : Hématome sous-dural intracrânien
+  chronique", same for post-operative, then the précisions; French dates ("11/10/2026 09:36").
+- **Visit note search** (same API): "hydroc", "méningiome", "chiari", "queue de cheval" find the new
+  diagnoses; with the synonyms, "hernie discale" finds the lumbar one, "mal de pott" finds
+  *Tuberculose vertébrale*, "canal lombaire" finds the lumbar stenosis.
+- Role checks PASS. The smoke test reported a failure once, right after a restart (which
+  check was not captured); the next 4 runs passed.
+
 ## 3. Problems found and fixed
 
 | Problem | Cause | Fix |
@@ -74,6 +108,7 @@ As the secretary (API): post-operative appointment at D+7 booked; patient added 
 | Admission done but bed not assigned (`403` on `POST /beds/1`) | the bed module requires *Assign Beds* **and** *Edit Admission Locations*; the nurse role had only the first | *Edit Admission Locations* added to the nurse role |
 | English labels (print menu, forms tab, notes, procedures, ward totals) | missing French translations in O3 | translation overrides in the frontend config |
 | "Printed by Super User" in the PDF footer | background rendering as the system user | the layout prints the date only |
+| Diagnosis search box showed no results when typing | the field needs `"isSearchable": true`, otherwise it loads one fixed list | added to both diagnosis fields |
 
 ## 4. Still open
 

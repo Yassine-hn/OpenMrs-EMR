@@ -22,7 +22,7 @@
               "id": "interv",
               "questionOptions": {
                 "rendering": "textarea",
-                "concept": "ccdb29b0-90b1-5d77-bdcc-16a7801f7725",
+                "concept": "166635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                 "rows": 2
               }
             },
@@ -51,18 +51,18 @@
               "id": "cote",
               "questionOptions": {
                 "rendering": "radio",
-                "concept": "ce69cc2c-3683-54b7-a9fb-c5f7503851da",
+                "concept": "160594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                 "answers": [
                   {
-                    "concept": "56c76918-6374-5373-b522-52ba68c9c28c",
+                    "concept": "5141AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "label": "Droit"
                   },
                   {
-                    "concept": "c9c9a106-8090-5ef1-9015-e6bdae3f8904",
+                    "concept": "5139AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "label": "Gauche"
                   },
                   {
-                    "concept": "22b1f82e-e168-522b-b49e-08fc3599cbb5",
+                    "concept": "160406AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "label": "Bilatéral"
                   },
                   {
@@ -89,6 +89,24 @@
             {
               "label": "Diagnostic pré-opératoire",
               "type": "obs",
+              "id": "dxpreCode",
+              "questionOptions": {
+                "rendering": "ui-select-extended",
+                "concept": "163034AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "isSearchable": true,
+                "datasource": {
+                  "name": "problem_datasource",
+                  "config": {
+                    "class": [
+                      "8d4918b0-c2cc-11de-8d13-0010c6dffd0f"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "label": "Diagnostic pré-opératoire - précisions",
+              "type": "obs",
               "id": "dxpre",
               "questionOptions": {
                 "rendering": "text",
@@ -97,6 +115,24 @@
             },
             {
               "label": "Diagnostic post-opératoire",
+              "type": "obs",
+              "id": "dxpostCode",
+              "questionOptions": {
+                "rendering": "ui-select-extended",
+                "concept": "163035AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "isSearchable": true,
+                "datasource": {
+                  "name": "problem_datasource",
+                  "config": {
+                    "class": [
+                      "8d4918b0-c2cc-11de-8d13-0010c6dffd0f"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "label": "Diagnostic post-opératoire - précisions",
               "type": "obs",
               "id": "dxpost",
               "questionOptions": {
@@ -143,14 +179,14 @@
               "id": "typane",
               "questionOptions": {
                 "rendering": "radio",
-                "concept": "d098c39a-f74f-5734-9493-f7bcf0c13005",
+                "concept": "164254AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                 "answers": [
                   {
-                    "concept": "b413772a-62b3-5d76-b5fc-741a3afa3f88",
+                    "concept": "161909AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "label": "Anesthésie générale"
                   },
                   {
-                    "concept": "e114a55a-ae43-5956-b0e7-64feee7dfc44",
+                    "concept": "161914AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "label": "Anesthésie locale"
                   },
                   {
@@ -158,8 +194,8 @@
                     "label": "Anesthésie locorégionale"
                   },
                   {
-                    "concept": "406d85b9-0a2b-59e3-9c9a-201da5403ce0",
-                    "label": "Sédation"
+                    "concept": "164244AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sédation intraveineuse"
                   }
                 ]
               }

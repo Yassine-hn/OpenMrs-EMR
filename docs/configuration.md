@@ -113,9 +113,11 @@ The clinical content (concepts, forms, print layout) is described for clinicians
 
 | Domain / folder | Content |
 | --- | --- |
-| `conceptsources/chu-blida/` | concept source **"CHU-Blida"**: local codes (`NCH-A-…` answers, `NCH-Q-…` questions) for concepts not taken from CIEL yet. Each local concept has a "same as" mapping `CHU-Blida:<code>`, so it can be matched to CIEL later (OCL) |
+| `conceptsources/chu-blida/` | concept source **"CHU-Blida"**: local codes (`NCH-A-…` answers, `NCH-Q-…` questions) for concepts that CIEL does not have. Each local concept has a "same as" mapping `CHU-Blida:<code>` |
 | `concepts/chu-blida/01-…-reponses.csv` | local answer concepts (`_order:1000`, loaded before the questions) |
 | `concepts/chu-blida/02-…-questions-….csv` | local question concepts, one file per form (`_order:1100`) |
+| `concepts/ciel/ciel-neurochirurgie.csv` | **CIEL concepts** used by the forms that are not in the `ocl` packages, defined with their CIEL UUID, names and `CIEL:<id>` mapping (`_order:1200`, after the local files, see below) |
+| `concepts/ciel/ciel-diagnostics-neurochirurgie.csv` | **34 neurosurgical diagnoses** from CIEL that the `ocl` diagnosis package lacks (subdural haematomas, hydrocephalus, brain and spinal tumours, aneurysms, disc herniations, Chiari…), with their ICD-10 codes and a French synonym where the clinical term differs (see below) |
 | `encountertypes/chu-blida/` | one encounter type per document (e.g. "Compte rendu opératoire") |
 | `ampathforms/chu-blida/` | the Form Builder forms (O3 JSON). Initializer derives the form's UUID itself (from name and version); the `uuid` field in the file is ignored |
 | `printing/chu-blida-encounter.xsl` | the **CHU print layout** for "Imprimer cette consultation". Not an Initializer domain: copied with the rest to `/openmrs/data/configuration/printing/`, and referenced by `encounterPrinting.json` (`stylesheetPath`) |
@@ -128,6 +130,50 @@ Rules for local content:
   `uuid5(NAMESPACE_URL, "https://chu-blida.dz/openmrs/neurochirurgie/" + code)`, so it can
   always be recomputed from its code.
 - Yes/No questions use CIEL 1065 (Oui) / 1066 (Non).
+
+**CIEL mapping** (2026-10-11). Each local concept was looked up in CIEL on OCL
+(app.openconceptlab.org, read-only, nothing created in the account). When CIEL has the same
+concept, the form now uses the CIEL concept:
+
+| Field | Was (local) | Now (CIEL) | Note |
+| --- | --- | --- | --- |
+| Score de Glasgow total | NCH-Q-GCST | **160347** Glasgow coma scale (Finding, numeric 0–15) | the trend widget reads it |
+| Intervention réalisée | NCH-Q-INTERV | **166635** Procedure performed (text) | |
+| Côté | NCH-Q-COTE | **160594** Laterality | answers 5141 Droit, 5139 Gauche, 160406 Bilatéral + local *Médian* + 1175 Non applicable |
+| Type d'anesthésie | NCH-Q-TYPANE | **164254** Anesthesia type | answers 161909 Anesthésie générale, 161914 Anesthésie locale, 164244 Sédation intraveineuse + local *Anesthésie locorégionale* |
+
+Kept local, because CIEL has no exact equivalent: the Glasgow components (eyes, verbal, motor),
+pupils, MRC grades per limb, mRS, body position, extent of resection, indication, and
+**blood loss** (CIEL 161928 is in **litres**; the surgeons write mL).
+
+**Coded diagnoses.** The operative report records the pre- and post-operative diagnoses as
+**CIEL 163034 / 163035** (coded), chosen by searching all diagnoses; the former free-text fields
+remain as "… - précisions".
+- Searchable diagnoses: the 2,186 of the CIEL starter package (`ocl`) plus our 34
+  neurosurgical ones. The same diagnoses are found by the visit note's diagnosis search.
+- Each of the 34 keeps CIEL's ICD-10 relation as is (`Mappings|SAME-AS|ICD-10-WHO`,
+  `Mappings|NARROWER-THAN|ICD-10-WHO`, `Mappings|BROADER-THAN|ICD-10-WHO` columns), for
+  statistics by ICD-10 chapter later.
+- 14 have a **French synonym** (`Synonym:fr`) because CIEL's French name is not the term used
+  in practice: "Hernie discale lombaire", "Canal lombaire étroit", "Mal de Pott",
+  "Schwannome vestibulaire", "Craniosténose", "Empyème sous-dural"… A search finds the synonym;
+  the official name is displayed and printed.
+- Not in CIEL, so not added: cavernoma (CIEL only has a generic "cavernous hemangioma").
+- Form field: `"rendering": "ui-select-extended"`, `"isSearchable": true`,
+  `"datasource": {"name": "problem_datasource", "config": {"class": ["<Diagnosis class uuid>"]}}`.
+  `isSearchable` is required: without it the field loads one fixed list and typing doesn't search.
+  The class must be a **list**: the engine then filters the results itself. With a single value
+  it is sent to the server, but the server ignores the class when there is a search term.
+
+How the switch is done, and why in this order:
+- The replaced local concepts are **retired** (`Void/Retire` = `TRUE` in their CSV), not deleted:
+  old test data still points to them.
+- OpenMRS ignores retired concepts when it checks for duplicate names, so the CIEL concepts can
+  carry the same French names ("Droit", "Type d'anesthésie"…). This works only if the local
+  files load first, hence `_order:1200` for the CIEL file.
+- Our CIEL answer lists are shorter than CIEL's (anaesthesia type) or have local answers added
+  (laterality). If a CIEL package that contains these concepts is loaded one day, it will replace
+  our answer lists; the forms keep working because they list their answers themselves.
 
 **Print layout** (`chu-blida-encounter.xsl`, XSL 1.0 for Apache FOP, strict validation):
 letterhead on every page (Republic, Ministry, CHU, service | patient, N° de dossier, NIN,
