@@ -14,6 +14,7 @@ performed, side, type of anaesthesia, diagnoses. The other fields use local code
 | [Consultation de neurochirurgie](#consultation-de-neurochirurgie) | v1, to be validated | consultation report (PDF, CHU letterhead) |
 | [Observation d'entrée](#observation-dentrée) | v1, to be validated | admission note (PDF, CHU letterhead) |
 | [Compte rendu opératoire](#compte-rendu-opératoire) | v1, to be validated | operative report (PDF, CHU letterhead) |
+| [Résultat anatomopathologique](#résultat-anatomopathologique) | v1, to be validated | pathology result (PDF, CHU letterhead) |
 | [Évaluation neurologique](#évaluation-neurologique) | v1, to be validated | neurological examination (PDF); trends on the patient summary |
 | [Demande d'admission](#demande-dadmission) | v1 | starts an admission, handled by the nurses in *Admissions* |
 
@@ -166,6 +167,39 @@ Questions for the reviewer:
 - Which frequent diagnoses of the department are missing? (Cavernoma is not in the CIEL
   dictionary; it can be added as a local diagnosis.)
 - Are the French names acceptable, or should more usual terms be added?
+
+## Résultat anatomopathologique
+
+Encounter type *Résultat anatomopathologique*. The neurosurgeon records the pathology result of
+a tumour (written by the pathology laboratory) in the patient's file, in a structured way so
+that tumour types, grades and markers can be counted later. Classification: **WHO 2021, 5th
+edition (CNS5)**. [Example](images/phase3/resultat-anatomopathologique-exemple.png) (test patient).
+
+| Section | Field | Type | Choices / range |
+| --- | --- | --- | --- |
+| **Prélèvement** | Date du prélèvement | date | |
+| | Type de prélèvement | choice | Pièce d'exérèse chirurgicale, Biopsie stéréotaxique, Biopsie chirurgicale à ciel ouvert, Autre |
+| | Laboratoire et n° d'examen | text | |
+| | Date du compte rendu | date | |
+| **Diagnostic** | Diagnostic intégré (OMS SNC5) | list | Glioblastome, IDH-sauvage; Astrocytome, IDH-muté; Oligodendrogliome, IDH-muté et 1p/19q-codélété; Gliome diffus de la ligne médiane, H3 K27-altéré; Astrocytome pilocytique; Épendymome; Schwannome; Médulloblastome; Méningiome intracrânien; Méningiome spinal; Adénome hypophysaire (PitNET); Craniopharyngiome; Lymphome primitif du SNC; Hémangioblastome; Métastase; Autre |
+| | Grade OMS du SNC | choice | Grade 1, 2, 3, 4, Non applicable |
+| | Compte rendu histologique | long text | the laboratory's text |
+| **Biologie moléculaire et immunohistochimie** | IDH | choice | Muté, Non muté (type sauvage), Non réalisé |
+| | Codélétion 1p/19q | choice | Codélétion présente, Absence de codélétion, Non réalisé |
+| | Méthylation du promoteur MGMT | choice | Méthylé, Non méthylé, Non réalisé |
+| | H3 K27M | choice | Muté, Non muté (type sauvage), Non réalisé |
+| | ATRX | choice | Expression conservée, Perte d'expression, Non réalisé |
+| | Index Ki-67 (%) | number (0–100) | |
+| | Autres marqueurs | text | |
+| **Conclusion** | Conclusion | long text | |
+
+Questions for the reviewer (and the pathologists):
+- Is the list of tumour types right for the department's activity? WHO CNS5 has many more
+  (e.g. ependymoma subtypes by location and molecular group, meningioma subtypes); which
+  should be separate choices?
+- Should the result be entered by the pathology laboratory itself (needs an account and a role
+  for them), or transcribed by the neurosurgeons as designed now?
+- Other markers to structure (p53, EGFR, CDKN2A/B, BRAF, TERT)?
 
 ## Évaluation neurologique
 

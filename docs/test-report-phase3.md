@@ -23,6 +23,7 @@
 | **Coded diagnoses** in the operative report: 34 neurosurgical CIEL diagnoses with ICD-10 (2026-10-11) | PASS: search in French and English, saved, printed; also found by the visit note's search |
 | Form **Consultation de neurochirurgie** (2026-10-13) | PASS: filled in the browser and through the API, saved, printed (1 page) |
 | Form **Observation d'entrée** (2026-10-13) | PASS: filled in the browser, saved, printed (1 page); no extra admission created |
+| Form **Résultat anatomopathologique** (2026-10-13) | PASS after one fix: filled in the browser, saved, printed (1 page) |
 | Smoke test (12 checks), role checks (18 checks) | PASS after all changes |
 
 ## 2. Details
@@ -132,6 +133,18 @@ What changed is in [`configuration.md`](configuration.md#neurosurgery-content-ph
 - Printed: 1 page, [rendered page](images/phase3/observation-entree-exemple.png).
 - Smoke test and role checks: PASS.
 
+### Résultat anatomopathologique (2026-10-13)
+
+- Loaded: encounter type, form, 12 local questions, 24 local answers, 2 CIEL questions (date of
+  report, histopathology text); answer lists checked (16 tumour types, 5 grades…), Ki-67 0–100 %.
+- In the browser (test-medecin, *Neurochirurgie - Hommes*): a glioblastoma case entered (all
+  choices, the tumour list, dates with the calendar). **First save refused**: "Unparseable date:
+  2026-10-02" on the specimen date (a Datetime concept with a date-only field), see §3. After
+  the fix: saved, 15 values stored.
+- Printed: 1 page, [rendered page](images/phase3/resultat-anatomopathologique-exemple.png);
+  dates printed 02/10/2026 and 12/10/2026, "Non réalisé" printed from the form's label.
+- Smoke test and role checks: PASS.
+
 ## 3. Problems found and fixed
 
 | Problem | Cause | Fix |
@@ -141,6 +154,7 @@ What changed is in [`configuration.md`](configuration.md#neurosurgery-content-ph
 | English labels (print menu, forms tab, notes, procedures, ward totals) | missing French translations in O3 | translation overrides in the frontend config |
 | "Printed by Super User" in the PDF footer | background rendering as the system user | the layout prints the date only |
 | Appointment date printed as "2026-10-27" | the module gives dates as `YYYY-MM-DD` | the layout converts them to `DD/MM/YYYY` |
+| Pathology form refused on save: "Unparseable date: 2026-10-02" | a calendar-only date field sends `YYYY-MM-DD`; the concept (CIEL 159951) is Datetime | local Date concept "Date du prélèvement" instead |
 | Diagnosis search box showed no results when typing | the field needs `"isSearchable": true`, otherwise it loads one fixed list | added to both diagnosis fields |
 
 ## 4. Still open

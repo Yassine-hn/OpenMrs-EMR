@@ -122,7 +122,8 @@ The clinical content (concepts, forms, print layout) is described for clinicians
 | `concepts/ciel/ciel-diagnostics-neurochirurgie.csv` | **34 neurosurgical diagnoses** from CIEL that the `ocl` diagnosis package lacks (subdural haematomas, hydrocephalus, brain and spinal tumours, aneurysms, disc herniations, Chiari…), with their ICD-10 codes and a French synonym where the clinical term differs (see below) |
 | `concepts/chu-blida/04-…-questions-consultation.csv` | local questions of the consultation form (`_order:1100`). Checked in OCL: CIEL has no text equivalent for *Adressé par*, *Traitement en cours*, *Intervention proposée*, *Examens demandés*, *Traitement prescrit* (its "Tests ordered" 1271 is coded); *Décision* could later use CIEL 166937 "Care management plan", which has no answers in CIEL |
 | `concepts/chu-blida/05-…-questions-observation-entree.csv` | the admission note's only local question, *Mode d'admission* (4 local answers: CIEL 162477 "Admission status" only has approved/denied) |
-| `encountertypes/chu-blida/` | one encounter type per document (e.g. "Compte rendu opératoire"). From the consultation on, the code behind each UUID is recorded: *Consultation de neurochirurgie* = `NCH-ET-CONSULT`, *Observation d'entrée* = `NCH-ET-OBSENTREE`. The admission note has its own type: the stock "Admission" type is the one the ward app uses for the admission itself |
+| `concepts/chu-blida/06-…-questions-anatomopathologie.csv` | the pathology form's local questions: specimen date and type, laboratory reference, WHO CNS5 diagnosis, CNS WHO grade, IDH, 1p/19q, MGMT, H3 K27M, ATRX, Ki-67, other markers (checked in OCL: CIEL has no IDH, MGMT, 1p/19q or Ki-67 concept; its "Histological grade" G1–G4 is the differentiation grade, not the CNS WHO grade). The diagnosis list reuses the CIEL diagnoses where they are exact (medulloblastoma, meningiomas, pituitary adenoma, craniopharyngioma, metastasis) |
+| `encountertypes/chu-blida/` | one encounter type per document (e.g. "Compte rendu opératoire"). From the consultation on, the code behind each UUID is recorded: *Consultation de neurochirurgie* = `NCH-ET-CONSULT`, *Observation d'entrée* = `NCH-ET-OBSENTREE`, *Résultat anatomopathologique* = `NCH-ET-ANAPATH`. The admission note has its own type: the stock "Admission" type is the one the ward app uses for the admission itself |
 | `ampathforms/chu-blida/` | the Form Builder forms (O3 JSON). Initializer derives the form's UUID itself (from name and version); the `uuid` field in the file is ignored |
 | `printing/chu-blida-encounter.xsl` | the **CHU print layout** for "Imprimer cette consultation". Not an Initializer domain: copied with the rest to `/openmrs/data/configuration/printing/`, and referenced by `encounterPrinting.json` (`stylesheetPath`) |
 
@@ -194,6 +195,10 @@ one line and long texts as blocks with their line breaks; a signature box; foote
   not appear on the PDF. So the consultation records its diagnosis as a coded observation
   (CIEL 1284, with certainty CIEL 159394), like the operative report;
 - a date answer comes from the module as `YYYY-MM-DD`; the layout prints it as `DD/MM/YYYY`;
+- a date field that shows only the calendar must use a concept of type **Date**: the form engine
+  then sends `YYYY-MM-DD`, which the server refuses for a **Datetime** concept ("Unparseable
+  date"). This is why the specimen date is local (CIEL 159951 "Specimen collection date" is
+  Datetime);
 - texts written as `markdown` in a form are printed too, so a form must not contain on-screen
   hints.
 

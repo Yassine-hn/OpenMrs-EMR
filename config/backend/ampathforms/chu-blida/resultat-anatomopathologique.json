@@ -1,0 +1,358 @@
+{
+  "uuid": "aadb0564-5924-5567-ab6b-1a59c5b82405",
+  "name": "Résultat anatomopathologique",
+  "description": "Résultat d'anatomopathologie, tumeurs du SNC, classification OMS 2021 (SNC5) (version 1, à valider par le service)",
+  "version": "1",
+  "published": true,
+  "retired": false,
+  "encounter": "Résultat anatomopathologique",
+  "processor": "EncounterFormProcessor",
+  "referencedForms": [],
+  "pages": [
+    {
+      "label": "Anatomopathologie",
+      "sections": [
+        {
+          "label": "Prélèvement",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Date du prélèvement",
+              "type": "obs",
+              "id": "datePrel",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "ae12f89a-13bc-5b27-a55d-d9e8e62c3d18"
+              }
+            },
+            {
+              "label": "Type de prélèvement",
+              "type": "obs",
+              "id": "typePrel",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "34eebb7b-a9a3-58cb-ba2a-78171264dc0a",
+                "answers": [
+                  {
+                    "concept": "f897ca0a-c305-5cf8-bd70-9b114d17d6cf",
+                    "label": "Pièce d'exérèse chirurgicale"
+                  },
+                  {
+                    "concept": "fab4bdc2-3363-599b-a391-63222f6d94c7",
+                    "label": "Biopsie stéréotaxique"
+                  },
+                  {
+                    "concept": "9e600636-fd81-5da0-bf0e-3cdd7d21ff8d",
+                    "label": "Biopsie chirurgicale à ciel ouvert"
+                  },
+                  {
+                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Autre"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Laboratoire et n° d'examen",
+              "type": "obs",
+              "id": "labRef",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "c4ea788a-2454-542b-af53-d9ac75ce43be"
+              }
+            },
+            {
+              "label": "Date du compte rendu",
+              "type": "obs",
+              "id": "dateCR",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "166848AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            }
+          ]
+        },
+        {
+          "label": "Diagnostic",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Diagnostic intégré (OMS SNC5)",
+              "type": "obs",
+              "id": "cns5",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "52b16348-a4a2-517e-bccb-6b0395ca0d86",
+                "answers": [
+                  {
+                    "concept": "4a65a122-61d1-5a14-94ba-fb099e6ea59c",
+                    "label": "Glioblastome, IDH-sauvage"
+                  },
+                  {
+                    "concept": "597b6735-56f2-586f-9571-de87d7be045c",
+                    "label": "Astrocytome, IDH-muté"
+                  },
+                  {
+                    "concept": "8fb77edc-01d1-5940-a5c4-a86b39de05c0",
+                    "label": "Oligodendrogliome, IDH-muté et 1p/19q-codélété"
+                  },
+                  {
+                    "concept": "ef9f5b5a-4a3b-5be0-b045-5ddb0ea95371",
+                    "label": "Gliome diffus de la ligne médiane, H3 K27-altéré"
+                  },
+                  {
+                    "concept": "fadf122e-19e0-5fae-ba92-7f2c333bb313",
+                    "label": "Astrocytome pilocytique"
+                  },
+                  {
+                    "concept": "056210f1-80bb-5cca-8a4f-eda8a19ddede",
+                    "label": "Épendymome"
+                  },
+                  {
+                    "concept": "7e9e4a9d-cced-53f9-bad1-eeeb728f4925",
+                    "label": "Schwannome"
+                  },
+                  {
+                    "concept": "163822AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Médulloblastome"
+                  },
+                  {
+                    "concept": "136625AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Méningiome intracrânien"
+                  },
+                  {
+                    "concept": "126184AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Méningiome spinal"
+                  },
+                  {
+                    "concept": "130163AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Adénome hypophysaire (PitNET)"
+                  },
+                  {
+                    "concept": "119768AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Craniopharyngiome"
+                  },
+                  {
+                    "concept": "d1202c61-f03e-5922-9120-603927f11fa3",
+                    "label": "Lymphome primitif du SNC"
+                  },
+                  {
+                    "concept": "96805423-2a5a-54cf-92c0-e666015dbe8f",
+                    "label": "Hémangioblastome"
+                  },
+                  {
+                    "concept": "126950AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Métastase"
+                  },
+                  {
+                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Autre (préciser dans le compte rendu)"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Grade OMS du SNC",
+              "type": "obs",
+              "id": "grade",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "7d29ebef-8938-578f-adc1-797ad436f9c5",
+                "answers": [
+                  {
+                    "concept": "5e6e9cc0-e7e7-53d5-8322-6236080c6a59",
+                    "label": "Grade 1"
+                  },
+                  {
+                    "concept": "ed9c5b93-a3c4-5bbb-b193-cfc0477a443f",
+                    "label": "Grade 2"
+                  },
+                  {
+                    "concept": "a583fc4f-fd9e-54d5-b914-d23266cb3066",
+                    "label": "Grade 3"
+                  },
+                  {
+                    "concept": "fded3c7b-0dcf-5e71-96a7-dfd45e271923",
+                    "label": "Grade 4"
+                  },
+                  {
+                    "concept": "1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non applicable"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Compte rendu histologique",
+              "type": "obs",
+              "id": "histo",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "161198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 5
+              }
+            }
+          ]
+        },
+        {
+          "label": "Biologie moléculaire et immunohistochimie",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "IDH",
+              "type": "obs",
+              "id": "idh",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "69123b8c-3785-5082-a3ea-0bec1403cf32",
+                "answers": [
+                  {
+                    "concept": "ae905a54-f627-528e-8e49-cc83e3a4357f",
+                    "label": "Muté"
+                  },
+                  {
+                    "concept": "34cbf487-4757-5419-a90a-08398465dca9",
+                    "label": "Non muté (type sauvage)"
+                  },
+                  {
+                    "concept": "1118AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non réalisé"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Codélétion 1p/19q",
+              "type": "obs",
+              "id": "p19q",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "d2fb3a80-f887-563d-b8f2-4fdf96bc33da",
+                "answers": [
+                  {
+                    "concept": "fa526200-b117-52bd-97dd-21573c4d85ee",
+                    "label": "Codélétion présente"
+                  },
+                  {
+                    "concept": "4bf41ae9-a087-5e06-8502-09fc5b875bfb",
+                    "label": "Absence de codélétion"
+                  },
+                  {
+                    "concept": "1118AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non réalisé"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Méthylation du promoteur MGMT",
+              "type": "obs",
+              "id": "mgmt",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "de8950a4-6bcf-5d9b-8315-bc6323f9925c",
+                "answers": [
+                  {
+                    "concept": "c31fc419-27b9-5429-9fdd-54bab493f174",
+                    "label": "Méthylé"
+                  },
+                  {
+                    "concept": "bba92059-be0d-5523-a33f-f3e053f29143",
+                    "label": "Non méthylé"
+                  },
+                  {
+                    "concept": "1118AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non réalisé"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "H3 K27M",
+              "type": "obs",
+              "id": "h3k27m",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "40b55e59-e4cf-50c6-9bd6-b4eb79abf0b9",
+                "answers": [
+                  {
+                    "concept": "ae905a54-f627-528e-8e49-cc83e3a4357f",
+                    "label": "Muté"
+                  },
+                  {
+                    "concept": "34cbf487-4757-5419-a90a-08398465dca9",
+                    "label": "Non muté (type sauvage)"
+                  },
+                  {
+                    "concept": "1118AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non réalisé"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "ATRX",
+              "type": "obs",
+              "id": "atrx",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "b7f94b15-b55c-5020-9aed-63f8aa3f406f",
+                "answers": [
+                  {
+                    "concept": "47d6b507-54d6-50fc-9dc5-ba04734120f5",
+                    "label": "Expression conservée"
+                  },
+                  {
+                    "concept": "7b8bbbb6-a9f7-5499-a50e-a1a57eff4a3c",
+                    "label": "Perte d'expression"
+                  },
+                  {
+                    "concept": "1118AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Non réalisé"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Index Ki-67 (%)",
+              "type": "obs",
+              "id": "ki67",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "d7d52830-9c37-53ad-ba91-b03d1640d5e2",
+                "min": "0",
+                "max": "100"
+              }
+            },
+            {
+              "label": "Autres marqueurs",
+              "type": "obs",
+              "id": "autresMarq",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "65bfb94f-6ffa-5ad6-a98b-69018337977e",
+                "rows": 2
+              }
+            }
+          ]
+        },
+        {
+          "label": "Conclusion",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Conclusion",
+              "type": "obs",
+              "id": "conclusion",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "161011AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

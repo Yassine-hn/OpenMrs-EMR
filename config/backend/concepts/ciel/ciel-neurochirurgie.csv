@@ -15,3 +15,5 @@ Uuid,Void/Retire,Same as mappings,Fully specified name:en,Fully specified name:f
 161550AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:161550,Referring facility name,Nom de l'établissement d'orientation,Misc,Text,,,,,,,
 163104AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:163104,Treatment plan (text),Plan de traitement,Question,Text,,,,,,,
 166021AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:166021,Nursing care plan,Plan de soins infirmiers,Question,Text,,,,,,,
+166848AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:166848,Date of report,Date du rapport,Question,Date,,,,,,,
+161198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,,CIEL:161198,Histopathology,Histopathologie,Test,Text,,,,,,,
