@@ -1,0 +1,415 @@
+{
+  "uuid": "de8f7304-8655-565d-a414-c5055e44091e",
+  "name": "Consultation de suivi",
+  "description": "Consultation de suivi post-opératoire et neuro-oncologique (version 1, à valider par le service)",
+  "version": "1",
+  "published": true,
+  "retired": false,
+  "encounter": "Consultation de suivi",
+  "processor": "EncounterFormProcessor",
+  "referencedForms": [],
+  "pages": [
+    {
+      "label": "Consultation de suivi",
+      "sections": [
+        {
+          "label": "Contexte du suivi",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Type de consultation de suivi",
+              "type": "obs",
+              "id": "typeSuivi",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "11b3fa5f-7675-58b8-b084-123b0b292861",
+                "answers": [
+                  {
+                    "concept": "c18792dc-a874-509e-a850-d6986d9e5bf8",
+                    "label": "Post-opératoire précoce (J+7 à J+30)"
+                  },
+                  {
+                    "concept": "0bd2a330-ef73-5b8b-a8c5-bb6151f883f3",
+                    "label": "Post-opératoire tardif (> 1 mois)"
+                  },
+                  {
+                    "concept": "40622b22-ba76-5955-a5fd-d4f377650cce",
+                    "label": "Suivi neuro-oncologique"
+                  },
+                  {
+                    "concept": "6f4f9435-22a5-5243-b314-cbb83ee71c1b",
+                    "label": "Surveillance lésionnelle"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Date de la dernière intervention chirurgicale",
+              "type": "obs",
+              "id": "dateInterv",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "cb3f3e7c-802a-5897-891b-c3e3e9173a2a"
+              }
+            },
+            {
+              "label": "Traitements en cours",
+              "type": "obs",
+              "id": "trtEnCours",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "6c9cf5be-b3a9-5dec-803e-d70f768b9eba",
+                "rows": 2
+              }
+            }
+          ]
+        },
+        {
+          "label": "Évaluation clinique et fonctionnelle",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Évolution des symptômes initiaux",
+              "type": "obs",
+              "id": "evolSymptomes",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "6c75c641-c50f-5ed3-b0c9-fbc67b511a8e",
+                "answers": [
+                  {
+                    "concept": "4255f90c-0087-58a9-a112-be6a99ca8e17",
+                    "label": "Disparition complète des symptômes"
+                  },
+                  {
+                    "concept": "1c8a1163-f1f3-53f3-abba-895fa6a167e2",
+                    "label": "Amélioration nette"
+                  },
+                  {
+                    "concept": "ab441c6c-18cd-5b4e-9d95-9822f0e0bc8d",
+                    "label": "Stabilité des symptômes"
+                  },
+                  {
+                    "concept": "19b24965-7eb1-5130-bce5-593b1f4d3bea",
+                    "label": "Aggravation des symptômes"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Examen clinique et neurologique",
+              "type": "obs",
+              "id": "examenNeuro",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "1391AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 4
+              }
+            },
+            {
+              "label": "Indice de Karnofsky (KPS %)",
+              "type": "obs",
+              "id": "kpsSuivi",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "5283AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "min": 0,
+                "max": 100
+              }
+            },
+            {
+              "label": "Échelle de Rankin modifiée (mRS)",
+              "type": "obs",
+              "id": "mrsSuivi",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "0a31bd2a-bf9c-5fa8-ab03-48072afc346b",
+                "answers": [
+                  {
+                    "concept": "2bd765cb-79ee-52e6-afc8-15a53d120381",
+                    "label": "0 - Aucun symptôme"
+                  },
+                  {
+                    "concept": "43ade901-d55c-5260-a3bb-ad99892b64ca",
+                    "label": "1 - Pas d'incapacité significative"
+                  },
+                  {
+                    "concept": "e2f2f3b3-cfe0-5437-9d21-02916a586f5a",
+                    "label": "2 - Handicap léger"
+                  },
+                  {
+                    "concept": "06cf4319-a191-5c68-b9b3-45cf2a2c22d0",
+                    "label": "3 - Handicap modéré"
+                  },
+                  {
+                    "concept": "f7b6dc27-5109-5dfb-98d2-8a536e1db2cf",
+                    "label": "4 - Handicap modérément sévère"
+                  },
+                  {
+                    "concept": "ec788624-de87-58b2-ae7f-2eaf0fe127a0",
+                    "label": "5 - Handicap sévère"
+                  },
+                  {
+                    "concept": "15dce319-d2f6-5587-9a9d-fd255a7874f5",
+                    "label": "6 - Décès"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "label": "Cicatrice et complications",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Aspect de la cicatrice opératoire",
+              "type": "obs",
+              "id": "aspectCicatrice",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "9097dfa6-226a-5425-ba0f-d83a909568ab",
+                "answers": [
+                  {
+                    "concept": "f2ea67b4-4bea-5732-9d72-573646de5c7e",
+                    "label": "Cicatrisation normale"
+                  },
+                  {
+                    "concept": "3b4206da-2ca5-50a2-9c66-84616df25e85",
+                    "label": "Retard de cicatrisation"
+                  },
+                  {
+                    "concept": "62923a02-a4a4-5230-b7b4-2f1854ace6c7",
+                    "label": "Fuite de liquide céphalorachidien cicatricielle"
+                  },
+                  {
+                    "concept": "fd05817a-2a96-5879-9f26-2dd70749f0bc",
+                    "label": "Cicatrice inflammatoire ou infectée"
+                  },
+                  {
+                    "concept": "8506f9fd-2ed9-5b57-9f26-7382f2dea8a9",
+                    "label": "Collection sous-cutanée"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Complications post-opératoires identifiées",
+              "type": "obs",
+              "id": "complications",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "3a33782e-0e30-5f9b-b3b7-13f861e715f7",
+                "answers": [
+                  {
+                    "concept": "9dcb0628-2b17-545e-9422-9c81d6980674",
+                    "label": "Aucune complication"
+                  },
+                  {
+                    "concept": "113919AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Infection du site opératoire"
+                  },
+                  {
+                    "concept": "115835AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Méningite"
+                  },
+                  {
+                    "concept": "5bfa0750-a399-5ef3-9d37-d14165be71a1",
+                    "label": "Hématome du lit opératoire"
+                  },
+                  {
+                    "concept": "0978df4a-e1a7-5c9b-8a14-2e135d15acb2",
+                    "label": "Déficit neurologique nouveau"
+                  },
+                  {
+                    "concept": "113054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Convulsions"
+                  },
+                  {
+                    "concept": "1292AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Thrombose veineuse profonde"
+                  },
+                  {
+                    "concept": "c8174d77-cd85-5522-8c73-05bb08f0a13c",
+                    "label": "Dysfonctionnement de dérivation ventriculaire"
+                  },
+                  {
+                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Autre"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Précisions sur les complications",
+              "type": "obs",
+              "id": "complicationsDetails",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "252d6114-5108-5a3a-99e1-7b6b57741a89",
+                "rows": 3
+              }
+            }
+          ]
+        },
+        {
+          "label": "Imagerie de contrôle",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Imagerie de contrôle réalisée",
+              "type": "obs",
+              "id": "imagerieRealisee",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "b489af1a-cdc7-5d6f-bc71-4cdfc2306a4f",
+                "answers": [
+                  {
+                    "concept": "bb7f0543-1a0e-533c-a150-4d16ef467591",
+                    "label": "IRM de contrôle"
+                  },
+                  {
+                    "concept": "ef926077-47ff-5503-ad18-7cac2113b5c6",
+                    "label": "TDM de contrôle"
+                  },
+                  {
+                    "concept": "297be39a-ee75-50f7-8154-a5721a972c47",
+                    "label": "Radiographie standard"
+                  },
+                  {
+                    "concept": "4cc0e2d3-84c4-586f-898a-d6ed84d7227c",
+                    "label": "Aucune imagerie réalisée"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Résultat de l'imagerie de contrôle",
+              "type": "obs",
+              "id": "resultatImagerie",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "4fea4c12-bc75-59d9-8d7f-322313c6a79f",
+                "answers": [
+                  {
+                    "concept": "78d47f65-25a2-5e94-a937-6d5ca2cd7566",
+                    "label": "Rémission complète ou cavité propre"
+                  },
+                  {
+                    "concept": "27b41ff5-343d-5c47-ae18-314f05a0339b",
+                    "label": "Reliquat lésionnel stable"
+                  },
+                  {
+                    "concept": "95b9d9da-4775-5b4a-9183-8afeb18d9f8d",
+                    "label": "Progression ou récidive lésionnelle"
+                  },
+                  {
+                    "concept": "547ddfcb-c9bf-5825-99d5-9015672591a9",
+                    "label": "Résultats d'imagerie en attente"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Détails de l'imagerie",
+              "type": "obs",
+              "id": "detailsImagerie",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "1392AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 3
+              }
+            }
+          ]
+        },
+        {
+          "label": "Conduite à tenir",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Décision de la consultation de suivi",
+              "type": "obs",
+              "id": "decisionSuivi",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "e3c8fcf9-6de7-5aff-90e8-68600bb0352a",
+                "answers": [
+                  {
+                    "concept": "2f95594a-fa96-55ac-990b-bd2f797aac76",
+                    "label": "Surveillance clinique et radiologique"
+                  },
+                  {
+                    "concept": "810154c1-1b1e-5bdc-853f-cb17f71252c7",
+                    "label": "Reprise des activités habituelles"
+                  },
+                  {
+                    "concept": "c6efd365-c5d8-5e7e-8060-2f342f3b620b",
+                    "label": "Adaptation du traitement médical"
+                  },
+                  {
+                    "concept": "1d668eac-b67b-5118-a1e6-3416196981ef",
+                    "label": "Rééducation ou kinésithérapie"
+                  },
+                  {
+                    "concept": "37d59667-6803-5567-9f96-389b26e6cde6",
+                    "label": "Présentation en RCP"
+                  },
+                  {
+                    "concept": "a8d552ff-c357-5a59-926e-e66f4614a71c",
+                    "label": "Indication de reprise chirurgicale"
+                  },
+                  {
+                    "concept": "e860ef81-a863-57b3-b079-fd823ce6725c",
+                    "label": "Avis oncologique ou radiothérapie"
+                  },
+                  {
+                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Autre"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Traitement prescrit",
+              "type": "obs",
+              "id": "traitementPrescrit",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "24193fbf-35ab-54a1-824b-8512c0c4d739",
+                "rows": 3
+              }
+            },
+            {
+              "label": "Examens demandés",
+              "type": "obs",
+              "id": "examensDemandes",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "0deece63-ebe5-5575-a51d-32c02263cc3a",
+                "rows": 2
+              }
+            },
+            {
+              "label": "Date du prochain rendez-vous",
+              "type": "obs",
+              "id": "prochainRdv",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
+              "label": "Commentaires",
+              "type": "obs",
+              "id": "commentairesSuivi",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "161011AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

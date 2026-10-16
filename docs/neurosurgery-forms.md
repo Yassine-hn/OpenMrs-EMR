@@ -16,6 +16,8 @@ performed, side, type of anaesthesia, diagnoses. The other fields use local code
 | [Compte rendu opératoire](#compte-rendu-opératoire) | v1, to be validated | operative report (PDF, CHU letterhead) |
 | [Résultat anatomopathologique](#résultat-anatomopathologique) | v1, to be validated | pathology result (PDF, CHU letterhead) |
 | [Évaluation neurologique](#évaluation-neurologique) | v1, to be validated | neurological examination (PDF); trends on the patient summary |
+| [Décision RCP](#décision-rcp) | v1, to be validated | multidisciplinary meeting decision (PDF, CHU letterhead) |
+| [Consultation de suivi](#consultation-de-suivi) | v1, to be validated | follow-up consultation report (PDF, CHU letterhead) |
 | [Demande d'admission](#demande-dadmission) | v1 | starts an admission, handled by the nurses in *Admissions* |
 
 ## How a document is printed
@@ -247,3 +249,67 @@ cliniques*) to ask for an admission:
 The request then appears in the ward's *Admissions* page ("1 demande d'admission" → *Gérer*),
 where a nurse admits the patient and chooses the bed. The form uses the CIEL concepts the ward
 app expects (inpatient disposition), so its structure must not be changed.
+
+## Décision RCP
+
+Encounter type *Décision RCP*. The neuro-oncology Multidisciplinary Team meeting (Réunion de
+Concertation Pluridisciplinaire) record, filled after discussion with neurosurgeons, oncologists,
+radiotherapists, neuropathologists, and radiologists.
+[Example](images/phase3/decision-rcp-exemple-1.png) (test patient).
+
+| Section | Field | Type | Choices / Values |
+| --- | --- | --- | --- |
+| **Organisation et participants** | Date de la RCP | date | |
+| | Coordonnateur de la RCP | text | |
+| | Membres présents (spécialités) | several choices | Neurochirurgie, Neuro-oncologie, Radiothérapie, Anatomopathologie, Neuroradiologie, Autre |
+| **Dossier clinique et diagnostic** | Motif de discussion en RCP | choice | Bilan diagnostique initial, Récidive tumorale, Échec thérapeutique, Deuxième avis, Réévaluation post-opératoire |
+| | Diagnostic principal | **search in diagnosis list** | see [Diagnoses](#diagnoses) |
+| | Certitude du diagnostic | choice | Confirmé, Présumé |
+| | Classification histopronostique (OMS SNC5) | list | 16 tumour types (WHO CNS5) |
+| | Indice de Karnofsky (KPS %) | number | 0–100 % |
+| | Échelle de Rankin modifiée (mRS) | choice | 0 Aucun symptôme … 6 Décès |
+| | Résumé clinique et antécédents | long text | |
+| **Données paracliniques** | Résumé de l'imagerie récente | long text | |
+| | Données neuropathologiques et moléculaires | long text | |
+| **Décision thérapeutique** | Proposition thérapeutique de la RCP | several choices | Surveillance clinique et radiologique, Chirurgie d'exérèse, Reprise chirurgicale, Biopsie seule, Radiothérapie conformationnelle, Radiochirurgie stéréotaxique, Chimiothérapie, Radio-chimiothérapie concomitante, Soins de support et palliatifs, Autre |
+| | Précisions sur le protocole thérapeutique | long text | |
+| **Conduite à tenir et suivi** | Délai du prochain contrôle radiologique | text | |
+| | Date de la prochaine évaluation ou RCP | date | |
+| | Médecin chargé de l'annonce | text | |
+| | Commentaires | long text | |
+
+Questions for the reviewer:
+- Are the specialty choices for MDT participants sufficient?
+- Should the therapeutic decision include specific clinical trial enrolment options?
+- Does the department require a formal patient consent record for the RCP decision?
+
+## Consultation de suivi
+
+Encounter type *Consultation de suivi*. Filled by the neurosurgeon at the outpatient follow-up
+consultation (early post-op check, late review, or oncology surveillance).
+[Example](images/phase3/consultation-suivi-exemple-1.png) (test patient).
+
+| Section | Field | Type | Choices / Values |
+| --- | --- | --- | --- |
+| **Contexte du suivi** | Type de consultation de suivi | choice | Post-opératoire précoce (J+7 à J+30), Post-opératoire tardif (> 1 mois), Suivi neuro-oncologique, Surveillance lésionnelle |
+| | Date de la dernière intervention chirurgicale | date | |
+| | Traitements en cours | long text | |
+| **Évaluation clinique et fonctionnelle** | Évolution des symptômes initiaux | choice | Disparition complète des symptômes, Amélioration nette, Stabilité des symptômes, Aggravation des symptômes |
+| | Examen clinique et neurologique | long text | |
+| | Indice de Karnofsky (KPS %) | number | 0–100 % |
+| | Échelle de Rankin modifiée (mRS) | choice | 0 Aucun symptôme … 6 Décès |
+| **Cicatrice et complications** | Aspect de la cicatrice opératoire | choice | Cicatrisation normale, Retard de cicatrisation, Fuite de liquide céphalorachidien cicatricielle, Cicatrice inflammatoire ou infectée, Collection sous-cutanée |
+| | Complications post-opératoires identifiées | several choices | Aucune complication, Infection du site opératoire, Méningite, Hématome du lit opératoire, Déficit neurologique nouveau, Convulsions, Thrombose veineuse profonde, Dysfonctionnement de dérivation ventriculaire, Autre |
+| | Précisions sur les complications | long text | |
+| **Imagerie de contrôle** | Imagerie de contrôle réalisée | choice | IRM de contrôle, TDM de contrôle, Radiographie standard, Aucune imagerie réalisée |
+| | Résultat de l'imagerie de contrôle | choice | Rémission complète ou cavité propre, Reliquat lésionnel stable, Progression ou récidive lésionnelle, Résultats d'imagerie en attente |
+| | Détails de l'imagerie | long text | |
+| **Conduite à tenir** | Décision de la consultation de suivi | several choices | Surveillance clinique et radiologique, Reprise des activités habituelles, Adaptation du traitement médical, Rééducation ou kinésithérapie, Présentation en RCP, Indication de reprise chirurgicale, Avis oncologique ou radiothérapie, Autre |
+| | Traitement prescrit | long text | |
+| | Examens demandés | text | |
+| | Date du prochain rendez-vous | date | |
+| | Commentaires | long text | |
+
+Questions for the reviewer:
+- Should the post-op complication list use a standardized grading system (e.g. Clavien-Dindo) in addition to named categories?
+- Is the distinction between early and late post-operative follow-up relevant for clinic scheduling?

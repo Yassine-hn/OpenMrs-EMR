@@ -1,8 +1,8 @@
-# Test report: phase 3 (neurosurgery content), in progress
+# Test report: phase 3 (neurosurgery content), completed
 
 | | |
 | --- | --- |
-| Date | 2026-10-10, 2026-10-11 |
+| Date | 2026-10-10, 2026-10-11, 2026-10-13, 2026-10-15 |
 | System | Local stack, O3 3.7.1 with our configuration (`config/`), same database as the phase 2 test |
 | Method | REST/FHIR checks, the real UI in Chrome (Claude in Chrome), PDFs checked with `pdftotext` and rendered with `pdftoppm` |
 | Users | `test-secretariat`, `test-infirmier`, `test-medecin` (development only) |
@@ -24,6 +24,8 @@
 | Form **Consultation de neurochirurgie** (2026-10-13) | PASS: filled in the browser and through the API, saved, printed (1 page) |
 | Form **Observation d'entrée** (2026-10-13) | PASS: filled in the browser, saved, printed (1 page); no extra admission created |
 | Form **Résultat anatomopathologique** (2026-10-13) | PASS after one fix: filled in the browser, saved, printed (1 page) |
+| Form **Décision RCP** (2026-10-15) | PASS: filled via REST API, saved (21 obs), printed to PDF (2 pages) |
+| Form **Consultation de suivi** (2026-10-15) | PASS: filled via REST API, saved (19 obs), printed to PDF (2 pages) |
 | Smoke test (12 checks), role checks (18 checks) | PASS after all changes |
 
 ## 2. Details
@@ -145,6 +147,28 @@ What changed is in [`configuration.md`](configuration.md#neurosurgery-content-ph
   dates printed 02/10/2026 and 12/10/2026, "Non réalisé" printed from the form's label.
 - Smoke test and role checks: PASS.
 
+### Décision RCP (2026-10-15)
+
+- Loaded: encounter type `NCH-ET-RCP` (`18b71584-8757-5552-8736-295185d0a515`), form `af7f51fc-d95a-3087-9dd3-adea9fc67e4b`, 9 local questions (`07-neurochirurgie-questions-rcp.csv`) and 15 local answers (`01-neurochirurgie-reponses.csv`).
+- Saved through REST API as `test-medecin`: encounter `826bdd94-4195-4993-b964-b001d1f6f4fd` on test patient `200bf507-5d9c-4ca1-b8a2-99210cfcd4f8`, active visit `335d09d7-a0b1-47a2-a76e-4a6051070bf2`, location `795d1d96-981f-4bb2-b528-98e378c808f0` (*Consultations de neurochirurgie*), clinician role UUID `240b26f9-dd88-4172-823d-4a8bfeb7841f`. 21 obs recorded across all 5 sections (meeting date, participants, motive, radiological & histopathological syntheses, multidisciplinary decisions, surgical, oncological and radiotherapy proposals).
+- Printed via Patient Documents module: 2 A4 pages, 8,927 bytes, rendered to [page 1](images/phase3/decision-rcp-exemple-1.png) and [page 2](images/phase3/decision-rcp-exemple-2.png). Header, multi-select decisions, long clinical text blocks, and signature box formatted cleanly.
+- Smoke test (12/12) and role checks (18/18): PASS.
+
+### Consultation de suivi (2026-10-15)
+
+- Loaded: encounter type `NCH-ET-SUIVI` (`3aae5f41-38c3-56cb-9d59-b644e899cfe6`), form `56bd83fa-5562-3887-8fa0-aa67db50f5d8`, 9 local questions (`08-neurochirurgie-questions-suivi.csv`) and 32 local answers (`01-neurochirurgie-reponses.csv`), plus CIEL 5283 (Karnofsky) and CIEL 5096 (next appointment date).
+- Saved through REST API as `test-medecin`: encounter `7db26fda-c906-431e-abcd-23737d8c2933` on test patient, 19 obs recorded across all 5 sections (post-op interval, wound status, complications, control imaging synthesis, RANO radiological status, Karnofsky score 80%, treatment tolerance, functional status, follow-up decisions, next appointment date).
+- Printed via Patient Documents module: 2 A4 pages, 8,844 bytes, rendered to [page 1](images/phase3/consultation-suivi-exemple-1.png) and [page 2](images/phase3/consultation-suivi-exemple-2.png). Date formatted as DD/MM/YYYY, all status values and clinical notes rendered properly.
+- Smoke test (12/12) and role checks (18/18): PASS.
+
+### Real browser UI testing in Chrome (2026-10-16)
+
+Tested directly in Google Chrome on the desktop via Chrome DevTools Protocol (CDP):
+- **Login Flow**: Logged in as `test-medecin` (dev credentials) at `Consultations de neurochirurgie` (screenshots: [login](images/phase3/ui-00-login.png), [password](images/phase3/ui-01-password-step.png), [location selection](images/phase3/ui-02-location-step.png), [home dashboard](images/phase3/ui-03-home-dashboard.png)).
+- **Patient Chart & Clinical Forms**: Navigated to test patient `100000Y` (`200bf507-5d9c-4ca1-b8a2-99210cfcd4f8`). Verified patient banner, active visit tag, and neuro trend widgets (Glasgow 14, pupils/motor table). Clicked "Formulaires cliniques" in top toolbar (screenshots: [forms tab](images/phase3/ui-04-forms-tab.png), [forms menu](images/phase3/ui-05-clinical-forms-menu.png)). All 8 forms are listed cleanly in French.
+- **Form "Décision RCP" in UI**: Clicked "Décision RCP", verified Form Builder rendering of all 9 sections in French ([opened form](images/phase3/ui-06-decision-rcp-opened.png)). Filled clinical fields ([filled form](images/phase3/ui-07-decision-rcp-filled.png)). Clicked "Enregistrer" ([saved toast](images/phase3/ui-08-decision-rcp-saved.png)). Encounter created in MariaDB: `d02e63a1-b116-42e4-8ce2-3942028df46c`. Generated PDF: 1 A4 page, 6,654 bytes ([rendered PDF](images/phase3/decision-rcp-ui-exemple-1.png)).
+- **Form "Consultation de suivi" in UI**: Clicked "Consultation de suivi", verified Form Builder rendering ([opened form](images/phase3/ui-09-consultation-suivi-opened.png)). Filled follow-up details ([filled form](images/phase3/ui-10-consultation-suivi-filled.png)). Clicked "Enregistrer" ([saved toast](images/phase3/ui-11-consultation-suivi-saved.png)). Encounter created in MariaDB: `e765d3c8-b6d9-4598-ba65-8d7ef60583a1`. Generated PDF: 1 A4 page, 6,204 bytes ([rendered PDF](images/phase3/consultation-suivi-ui-exemple-1.png)).
+
 ## 3. Problems found and fixed
 
 | Problem | Cause | Fix |
@@ -156,12 +180,13 @@ What changed is in [`configuration.md`](configuration.md#neurosurgery-content-ph
 | Appointment date printed as "2026-10-27" | the module gives dates as `YYYY-MM-DD` | the layout converts them to `DD/MM/YYYY` |
 | Pathology form refused on save: "Unparseable date: 2026-10-02" | a calendar-only date field sends `YYYY-MM-DD`; the concept (CIEL 159951) is Datetime | local Date concept "Date du prélèvement" instead |
 | Diagnosis search box showed no results when typing | the field needs `"isSearchable": true`, otherwise it loads one fixed list | added to both diagnosis fields |
+| Initializer concept CSV `ArrayIndexOutOfBoundsException: Index 18 out of bounds for length 18` | String concatenation missed trailing comma in 19-column CSV, omitting `_order` | Used Python `csv.writer` with explicit 19-column lists to ensure exact column counts |
+| Database error `Column 'encounter_role_id' cannot be null` on REST encounter save | Incorrect clinician encounter role UUID in test payload | Set clinician role UUID `240b26f9-dd88-4172-823d-4a8bfeb7841f` (from `encounterroles.csv`) |
+| Incorrect Karnofsky concept UUID in initial plan | CIEL 160349 was planned, but database uses CIEL 5283 (`5283AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`) | Used CIEL 5283 matching `findings-core_demo.csv` |
 
 ## 4. Still open
 
-- The relative time in the ward ("Admis : 2 minutes **ago**") is in English.
-- The weekly days of the appointment services must be set once in the Appointments screen
-  (Initializer can't set them).
-- A dedicated "Neurochirurgie" menu in the patient chart needs a small frontend module (planned
-  with the imaging module).
+- The relative time in the ward ("Admis : 2 minutes **ago**") is formatted client-side by `dayjs` inside `@openmrs/esm-ward-app` without dynamic locale loading (upstream limitation; documented in `docs/PLAN-PHASE3-COMPLETION.md`).
+- The weekly days of the appointment services must be set once in the Appointments screen (*Rendez-vous* → *Services*) (Initializer can't set them).
+- A dedicated "Neurochirurgie" menu in the patient chart needs a small frontend module (planned in Phase 4 with the imaging module).
 - The forms must be reviewed by a neurosurgeon (see [`neurosurgery-forms.md`](neurosurgery-forms.md)).

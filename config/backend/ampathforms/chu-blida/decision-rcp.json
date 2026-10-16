@@ -1,0 +1,422 @@
+{
+  "uuid": "33d902dc-c89b-55a4-89c3-a41a7436d669",
+  "name": "Décision RCP",
+  "description": "Décision de la réunion de concertation pluridisciplinaire en neuro-oncologie (version 1, à valider par le service)",
+  "version": "1",
+  "published": true,
+  "retired": false,
+  "encounter": "Décision RCP",
+  "processor": "EncounterFormProcessor",
+  "referencedForms": [],
+  "pages": [
+    {
+      "label": "Décision RCP",
+      "sections": [
+        {
+          "label": "Organisation et participants",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Date de la RCP",
+              "type": "obs",
+              "id": "dateRcp",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "6a8571e6-9870-5dff-9da1-bb18fee164a9"
+              }
+            },
+            {
+              "label": "Coordonnateur de la RCP",
+              "type": "obs",
+              "id": "coordRcp",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "a83ca664-c59e-54d5-9a44-091a0a88ab8c"
+              }
+            },
+            {
+              "label": "Membres présents (spécialités)",
+              "type": "obs",
+              "id": "membresRcp",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "71c32e52-43eb-5814-b8e3-5fc0de0ee0a2",
+                "answers": [
+                  {
+                    "concept": "9e36e782-ac54-5607-8464-1c6674c8c627",
+                    "label": "Neurochirurgie"
+                  },
+                  {
+                    "concept": "dca32fb8-4799-5761-8bb1-7b32099c6137",
+                    "label": "Neuro-oncologie"
+                  },
+                  {
+                    "concept": "29e26878-5378-58b1-8c79-5bcbba023745",
+                    "label": "Radiothérapie"
+                  },
+                  {
+                    "concept": "0889dbef-40d6-579d-a31f-ef40fe69f2ac",
+                    "label": "Anatomopathologie"
+                  },
+                  {
+                    "concept": "26e3610e-6b99-5732-9beb-8156b08b0fd3",
+                    "label": "Neuroradiologie"
+                  },
+                  {
+                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Autre"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "label": "Dossier clinique et diagnostic",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Motif de discussion en RCP",
+              "type": "obs",
+              "id": "motifRcp",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "f375731d-3fa6-5bcb-8048-8ea54f15ce39",
+                "answers": [
+                  {
+                    "concept": "90b447a7-f627-511c-ad4c-12f69ca910c8",
+                    "label": "Bilan diagnostique initial"
+                  },
+                  {
+                    "concept": "f613390e-db7b-53bb-801e-6a3b561673db",
+                    "label": "Récidive tumorale"
+                  },
+                  {
+                    "concept": "e5d16606-8922-5f84-9bce-4b3f265156a0",
+                    "label": "Échec thérapeutique"
+                  },
+                  {
+                    "concept": "7ff7d9b3-2cb8-54f6-aab3-2b55975ead32",
+                    "label": "Deuxième avis"
+                  },
+                  {
+                    "concept": "ae2b5dbe-a617-5e0f-908f-91caf7ce111d",
+                    "label": "Réévaluation post-opératoire"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Diagnostic principal",
+              "type": "obs",
+              "id": "dxPrincipal",
+              "questionOptions": {
+                "rendering": "ui-select-extended",
+                "concept": "1284AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "isSearchable": true,
+                "datasource": {
+                  "name": "problem_datasource",
+                  "config": {
+                    "class": [
+                      "8d4918b0-c2cc-11de-8d13-0010c6dffd0f"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "label": "Certitude du diagnostic",
+              "type": "obs",
+              "id": "dxCertitude",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "159394AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "answers": [
+                  {
+                    "concept": "159392AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Confirmé"
+                  },
+                  {
+                    "concept": "159393AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Présumé"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Classification histopronostique (OMS SNC5)",
+              "type": "obs",
+              "id": "cns5",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "52b16348-a4a2-517e-bccb-6b0395ca0d86",
+                "answers": [
+                  {
+                    "concept": "4a65a122-61d1-5a14-94ba-fb099e6ea59c",
+                    "label": "Glioblastome, IDH-sauvage"
+                  },
+                  {
+                    "concept": "597b6735-56f2-586f-9571-de87d7be045c",
+                    "label": "Astrocytome, IDH-muté"
+                  },
+                  {
+                    "concept": "8fb77edc-01d1-5940-a5c4-a86b39de05c0",
+                    "label": "Oligodendrogliome, IDH-muté et 1p/19q-codélété"
+                  },
+                  {
+                    "concept": "ef9f5b5a-4a3b-5be0-b045-5ddb0ea95371",
+                    "label": "Gliome diffus de la ligne médiane, H3 K27-altéré"
+                  },
+                  {
+                    "concept": "fadf122e-19e0-5fae-ba92-7f2c333bb313",
+                    "label": "Astrocytome pilocytique"
+                  },
+                  {
+                    "concept": "056210f1-80bb-5cca-8a4f-eda8a19ddede",
+                    "label": "Épendymome"
+                  },
+                  {
+                    "concept": "7e9e4a9d-cced-53f9-bad1-eeeb728f4925",
+                    "label": "Schwannome"
+                  },
+                  {
+                    "concept": "163822AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Médulloblastome"
+                  },
+                  {
+                    "concept": "136625AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Méningiome intracrânien"
+                  },
+                  {
+                    "concept": "126184AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Méningiome spinal"
+                  },
+                  {
+                    "concept": "130163AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Adénome hypophysaire (PitNET)"
+                  },
+                  {
+                    "concept": "119768AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Craniopharyngiome"
+                  },
+                  {
+                    "concept": "d1202c61-f03e-5922-9120-603927f11fa3",
+                    "label": "Lymphome primitif du SNC"
+                  },
+                  {
+                    "concept": "96805423-2a5a-54cf-92c0-e666015dbe8f",
+                    "label": "Hémangioblastome"
+                  },
+                  {
+                    "concept": "126950AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Métastase"
+                  },
+                  {
+                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Autre"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Indice de Karnofsky (KPS %)",
+              "type": "obs",
+              "id": "kps",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "5283AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "min": 0,
+                "max": 100
+              }
+            },
+            {
+              "label": "Échelle de Rankin modifiée (mRS)",
+              "type": "obs",
+              "id": "mrs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "0a31bd2a-bf9c-5fa8-ab03-48072afc346b",
+                "answers": [
+                  {
+                    "concept": "2bd765cb-79ee-52e6-afc8-15a53d120381",
+                    "label": "0 - Aucun symptôme"
+                  },
+                  {
+                    "concept": "43ade901-d55c-5260-a3bb-ad99892b64ca",
+                    "label": "1 - Pas d'incapacité significative"
+                  },
+                  {
+                    "concept": "e2f2f3b3-cfe0-5437-9d21-02916a586f5a",
+                    "label": "2 - Handicap léger"
+                  },
+                  {
+                    "concept": "06cf4319-a191-5c68-b9b3-45cf2a2c22d0",
+                    "label": "3 - Handicap modéré"
+                  },
+                  {
+                    "concept": "f7b6dc27-5109-5dfb-98d2-8a536e1db2cf",
+                    "label": "4 - Handicap modérément sévère"
+                  },
+                  {
+                    "concept": "ec788624-de87-58b2-ae7f-2eaf0fe127a0",
+                    "label": "5 - Handicap sévère"
+                  },
+                  {
+                    "concept": "15dce319-d2f6-5587-9a9d-fd255a7874f5",
+                    "label": "6 - Décès"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Résumé clinique et antécédents",
+              "type": "obs",
+              "id": "resumeClinique",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "159395AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 3
+              }
+            }
+          ]
+        },
+        {
+          "label": "Données paracliniques",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Résumé de l'imagerie récente",
+              "type": "obs",
+              "id": "imgRecente",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "d27b93e6-b3b9-5602-8ca2-d5b197d1a052",
+                "rows": 3
+              }
+            },
+            {
+              "label": "Données neuropathologiques et moléculaires",
+              "type": "obs",
+              "id": "donneesAnapath",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "161198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 3
+              }
+            }
+          ]
+        },
+        {
+          "label": "Décision thérapeutique",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Proposition thérapeutique de la RCP",
+              "type": "obs",
+              "id": "decisionRcp",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "f4877355-30cd-5139-ae4b-903a4c097393",
+                "answers": [
+                  {
+                    "concept": "2f95594a-fa96-55ac-990b-bd2f797aac76",
+                    "label": "Surveillance clinique et radiologique"
+                  },
+                  {
+                    "concept": "94cd65e0-c0e9-5819-9a87-3cb49821ec0d",
+                    "label": "Chirurgie d'exérèse"
+                  },
+                  {
+                    "concept": "bb0b73e8-bc1f-5615-bdf2-c7c2c1053a5f",
+                    "label": "Reprise chirurgicale"
+                  },
+                  {
+                    "concept": "52807113-90d9-5cd9-bca4-06062144d60f",
+                    "label": "Biopsie seule"
+                  },
+                  {
+                    "concept": "2433d700-1a43-50c2-b6ce-5c323a29d221",
+                    "label": "Radiothérapie conformationnelle"
+                  },
+                  {
+                    "concept": "172de7ae-61b0-5133-95a4-879c2f62f0e3",
+                    "label": "Radiochirurgie stéréotaxique"
+                  },
+                  {
+                    "concept": "7e1e9ace-055c-5f84-a7a2-3a008b5b6794",
+                    "label": "Chimiothérapie"
+                  },
+                  {
+                    "concept": "ad21366b-f489-5c78-a814-4a711fc7e72a",
+                    "label": "Radio-chimiothérapie concomitante"
+                  },
+                  {
+                    "concept": "9314653c-65d0-5e38-91b4-b7eb4c32a2d3",
+                    "label": "Soins de support et palliatifs"
+                  },
+                  {
+                    "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Autre"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Précisions sur le protocole thérapeutique",
+              "type": "obs",
+              "id": "protocoleDetails",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "cc0d0922-f710-5de4-919a-4f505598ccdf",
+                "rows": 4
+              }
+            }
+          ]
+        },
+        {
+          "label": "Conduite à tenir et suivi",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "label": "Délai du prochain contrôle radiologique",
+              "type": "obs",
+              "id": "delaiImg",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "345e0aaf-eeff-595c-8187-718862f4f032"
+              }
+            },
+            {
+              "label": "Date de la prochaine évaluation ou RCP",
+              "type": "obs",
+              "id": "dateProchaineRcp",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+              }
+            },
+            {
+              "label": "Médecin chargé de l'annonce",
+              "type": "obs",
+              "id": "medecinAnnonce",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "0d8f183d-b54f-5a8c-963a-d1d412b3ede9"
+              }
+            },
+            {
+              "label": "Commentaires",
+              "type": "obs",
+              "id": "commentairesRcp",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "161011AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "rows": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

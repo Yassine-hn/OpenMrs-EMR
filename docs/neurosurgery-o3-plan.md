@@ -2,7 +2,7 @@
 
 | | |
 | --- | --- |
-| Status | **v2, decisions recorded 2026-10-10 (§6). Phase 2 DONE on 2026-10-10 (§7); Phase 3 in progress (§7).** |
+| Status | **v2, decisions recorded 2026-10-10 (§6). Phase 2 DONE on 2026-10-10; Phase 3 DONE on 2026-10-15 (§7); Ready for Phase 4 (Imaging).** |
 | Date | 2026-10-10 |
 | Target | Neurosurgery department, CHU Frantz Fanon, Blida. Fresh deployment, no data migration. |
 | Servers | **Server 1** (in the hospital, 8 GB RAM): O3 + Orthanc + OHIF. **Server 2** (GPU): AI, last phase. |
@@ -261,19 +261,9 @@ Carried over to phase 3:
 Phase 3 then starts with the **print spike (B1)**: a sample operative report printed as a
 PDF with the CHU letterhead.
 
-**Phase 3 progress (2026-10-10 to 2026-10-13):** details in [`test-report-phase3.md`](test-report-phase3.md).
-- **Done and tested:** the print spike (operative report → PDF on the CHU layout); forms
-  *Compte rendu opératoire*, *Évaluation neurologique* (calculated Glasgow total) and
-  *Demande d'admission*; Glasgow/Karnofsky and pupils/motor trends on the patient summary;
-  3 consultation services; consultation queue with French statuses; 42 beds in 3 wards;
-  admission to a bed; French translation overrides; CIEL mapping checked in OCL, 4 questions
-  and 6 answers switched to CIEL concepts (the rest has no exact CIEL equivalent); coded
-  pre/post-operative diagnoses with 34 neurosurgical CIEL diagnoses (ICD-10 codes, French
-  synonyms), also available in the visit note; *Consultation de neurochirurgie* form with a
-  printed consultation report, *Observation d'entrée* (admission note) and *Résultat
-  anatomopathologique* (WHO CNS5) (2026-10-13).
-- **Remaining:** the other forms (MDT decision, follow-up); the services'
-  weekly days; the relative-time translation; clinical review of the forms.
+**Phase 3 progress (2026-10-10 to 2026-10-15):** details in [`test-report-phase3.md`](test-report-phase3.md).
+- **Done and tested (Phase 3 completed 2026-10-15):** the print spike (operative report → PDF on the CHU layout); all 8 neurosurgery clinical forms: *Compte rendu opératoire*, *Évaluation neurologique* (calculated Glasgow total), *Demande d'admission*, *Consultation de neurochirurgie*, *Observation d'entrée* (admission note), *Résultat anatomopathologique* (WHO CNS5), *Décision RCP* (MDT neuro-oncology meeting), and *Consultation de suivi* (postoperative & neuro-oncology follow-up); Glasgow/Karnofsky and pupils/motor trends on the patient summary; 3 consultation services; consultation queue with French statuses; 42 beds in 3 wards; admission to a bed; French translation overrides; CIEL mapping checked in OCL, questions and answers mapped to CIEL concepts where available, with local concepts defined under `CHU-Blida` source with stable `uuid5` UUIDs; coded pre/post-operative diagnoses with 34 neurosurgical CIEL diagnoses (ICD-10 codes, French synonyms), also available in the visit note; PDF encounter printing verified on all forms; automated smoke test (12/12) and role permission checks (18/18) PASS.
+- **Phase 4 next:** Imaging (Orthanc 26.9.1 + OHIF 3.13.12 via gateway reverse proxy and session verification; CD/USB import flow; frontend imaging app `esm-neuro-imaging-app`).
 
 Repository layout from Phase 2 on: `config/` (Initializer, frontend config, print
 layout), later `gateway/`, `modules/esm-neuro-imaging-app/` and `orthanc/`. One place,

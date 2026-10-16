@@ -4,8 +4,9 @@
 # Local backups (database dumps, config copies) - may contain patient data
 backups/
 
-# Personal working log - local only
+# Personal working log and private plans - local only
 WORK-LOG.md
+PLAN-*.md
 
 # Personal screenshots (may show patient data)
 Screenshots/
