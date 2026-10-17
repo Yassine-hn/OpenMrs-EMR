@@ -12,11 +12,13 @@ data migration. The plan is `docs/neurosurgery-o3-plan.md`.
 - **Phase 1 (done):** stock O3 3.7.1 in Docker, images pinned by digest.
 - **Phase 2 (done 2026-10-10):** our own configuration replaces the demo configuration
   (`config/`, see `docs/configuration.md`). Same 3.7.1 images. No custom code.
-- **Phase 3 (current):** neurosurgery content by configuration: forms + CHU print layout,
-  concepts (CIEL where it has them, otherwise the local `CHU-Blida` source), clinic services and queue, beds
-  (see `docs/neurosurgery-forms.md`, `docs/test-report-phase3.md`).
-- **Later phases:** Orthanc + OHIF and new modules written from scratch in this repo. Each
-  phase is planned before it starts.
+- **Phase 3 (done 2026-10-16):** neurosurgery content by configuration: 8 forms + CHU print layout,
+  concepts (CIEL where it has them, otherwise the local `CHU-Blida` source), clinic services and queue, beds,
+  real browser UI verification and test suite (see `docs/neurosurgery-forms.md`, `docs/test-report-phase3.md`).
+- **Phase 4 (current):** Imaging: Orthanc 26.9.1 (PostgreSQL index, DICOM storage) + OHIF 3.13.12,
+  gateway access control (OpenMRS session check via `auth_request`), and frontend module
+  `esm-neuro-imaging-app` (imaging tab in patient chart, CD/USB import with identity rewrite).
+- **Later phases:** Hospital pilot, surgical pathway, statistics, and AI on Server 2.
 
 Build principles: stock O3 first, then configuration, then a **new** module only when
 needed. Nothing is copied from the old system.

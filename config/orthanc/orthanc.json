@@ -1,0 +1,36 @@
+{
+  "Name": "CHU Blida Neurochirurgie PACS",
+  "StorageDirectory": "/var/lib/orthanc/storage",
+  "IndexDirectory": "/var/lib/orthanc/storage",
+  "StorageCompression": false,
+  "ConcurrentJobs": 4,
+  "HttpPort": 8042,
+  "RemoteAccessAllowed": true,
+  "AuthenticationEnabled": false,
+  "DicomPort": 4242,
+  "DicomAet": "${ORTHANC_AET:-ORTHANC}",
+  "DicomCheckCalledAet": false,
+  "DicomAlwaysAllowEcho": true,
+  "DicomAlwaysAllowStore": true,
+  "DicomAlwaysAllowFind": true,
+  "DicomAlwaysAllowMove": true,
+  "DicomModalities": {},
+  "PostgreSQL": {
+    "EnableIndex": true,
+    "EnableStorage": false,
+    "Host": "orthanc-db",
+    "Port": 5432,
+    "Database": "${ORTHANC_DB_NAME}",
+    "Username": "${ORTHANC_DB_USER}",
+    "Password": "${ORTHANC_DB_PASSWORD}",
+    "EnableSsl": false,
+    "Lock": false
+  },
+  "DicomWeb": {
+    "Enable": true,
+    "Root": "/dicom-web/",
+    "EnableWado": true,
+    "WadoRoot": "/dicom-web/",
+    "Ssl": false
+  }
+}

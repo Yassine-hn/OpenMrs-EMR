@@ -16,11 +16,18 @@
 #                 the backend copies it into its data folder on every start, then Initializer loads it
 #       frontend: ./config/frontend mounted at /usr/share/nginx/html/site (read-only), used via
 #                 SPA_CONFIG_URLS (replaces config-core_demo.json); French as default language
+#       gateway:  ./gateway/templates mounted at /etc/nginx/conf-templates (read-only), includes
+#                 OpenMRS auth_request check for imaging and routes for /ohif and /dicom-web
 #   - admin password from .env (OMRS_ADMIN_PASSWORD) instead of the public default
 #   - time zone Africa/Algiers (UTC+1, no daylight saving) for both the JVM and MariaDB
+#   - Phase 4 Imaging services:
+#       orthanc:    Orthanc 26.9.1 PACS server with DICOMweb and PostgreSQL index
+#       orthanc-db: PostgreSQL 16 Alpine for Orthanc index
+#       ohif:       OHIF 3.13.12 zero-footprint web viewer under /ohif/
 #
 # Usage: cp .env.example .env  (fill it in), then  docker compose up -d
 # UI: http://localhost/openmrs/spa    Legacy admin UI: http://localhost/openmrs
+# OHIF Viewer: http://localhost/ohif/
 
 name: openmrs-emr
 
@@ -31,8 +38,16 @@ services:
     depends_on:
       - frontend
       - backend
+      - orthanc
+      - ohif
     ports:
       - "${HTTP_PORT:-80}:80"
+    volumes:
+      - ./gateway/templates:/etc/nginx/conf-templates:ro
+    deploy:
+      resources:
+        limits:
+          memory: 128M
 
   frontend:
     image: openmrs/openmrs-reference-application-3-frontend:3.7.1@sha256:f6b1f8443ab27a6b1c3944c5a948f2e0cdfea3701dcfd59316677fef28a58f8d
@@ -49,6 +64,10 @@ services:
       timeout: 5s
     depends_on:
       - backend
+    deploy:
+      resources:
+        limits:
+          memory: 128M
 
   backend:
     image: openmrs/openmrs-reference-application-3-backend:3.7.1@sha256:929cfe5dca5f221460e0f4a57abb9294614df5f74fbb3bb865e01b8dfe7a985b
@@ -75,6 +94,10 @@ services:
     volumes:
       - openmrs-data:/openmrs/data
       - ./config/backend:/openmrs/distribution/openmrs_config:ro
+    deploy:
+      resources:
+        limits:
+          memory: 2560M
 
   # MariaDB - the database the O3 distribution is built and tested against
   db:
@@ -95,7 +118,82 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in .env}
     volumes:
       - db-data:/var/lib/mysql
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+
+  # PostgreSQL 16 - database index for Orthanc PACS
+  orthanc-db:
+    image: postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
+    restart: "unless-stopped"
+    environment:
+      POSTGRES_DB: ${ORTHANC_DB_NAME:?set ORTHANC_DB_NAME in .env}
+      POSTGRES_USER: ${ORTHANC_DB_USER:?set ORTHANC_DB_USER in .env}
+      POSTGRES_PASSWORD: ${ORTHANC_DB_PASSWORD:?set ORTHANC_DB_PASSWORD in .env}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - orthanc-db-data:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # Orthanc PACS server (26.9.1 / core 1.13.0) with PostgreSQL index and DICOMweb plugin
+  orthanc:
+    image: orthancteam/orthanc:26.9.1@sha256:d2705f2c56547e55ce9bc2250fd22d05d326493b3f3d9fa191ecb7db8ca6b5a2
+    restart: "unless-stopped"
+    depends_on:
+      orthanc-db:
+        condition: service_healthy
+    environment:
+      ORTHANC_AET: ${ORTHANC_AET:-ORTHANC}
+      ORTHANC_DB_NAME: ${ORTHANC_DB_NAME:?set ORTHANC_DB_NAME in .env}
+      ORTHANC_DB_USER: ${ORTHANC_DB_USER:?set ORTHANC_DB_USER in .env}
+      ORTHANC_DB_PASSWORD: ${ORTHANC_DB_PASSWORD:?set ORTHANC_DB_PASSWORD in .env}
+      POSTGRESQL_PLUGIN_ENABLED: "true"
+      DICOM_WEB_PLUGIN_ENABLED: "true"
+      ORTHANC__AUTHENTICATION_ENABLED: "false"
+    ports:
+      # DICOM C-STORE for hospital modalities / PACS network
+      - "4242:4242"
+    volumes:
+      - ./config/orthanc:/etc/orthanc:ro
+      - orthanc-storage:/var/lib/orthanc/storage
+    deploy:
+      resources:
+        limits:
+          memory: 1280M
+
+  # OHIF Viewer 3.13.12 zero-footprint web medical imaging viewer
+  ohif:
+    image: ohif/app:v3.13.12@sha256:d9c875439ee682efb751c004ee9124405861633a5e7dd654f792e55a2dcce895
+    restart: "unless-stopped"
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        ln -sf /usr/share/nginx/html /usr/share/nginx/html/ohif && \
+        sed -i -e 's|window.PUBLIC_URL="/"|window.PUBLIC_URL="/ohif/"|g' -e 's|src="/|src="/ohif/|g' -e 's|href="/|href="/ohif/|g' /usr/share/nginx/html/index.html && \
+        gunzip -f /usr/share/nginx/html/app.bundle.*.js.gz && \
+        sed -i 's|__webpack_require__\.p = "/"|__webpack_require__.p = "/ohif/"|g' /usr/share/nginx/html/app.bundle.*.js && \
+        gzip -k -f /usr/share/nginx/html/app.bundle.*.js && \
+        cp /etc/ohif/app-config.js /usr/share/nginx/html/app-config.js && \
+        exec /usr/src/entrypoint.sh nginx -g 'daemon off;'
+    volumes:
+      - ./config/ohif:/etc/ohif:ro
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
 
 volumes:
   openmrs-data: ~
   db-data: ~
+  orthanc-db-data: ~
+  orthanc-storage: ~
