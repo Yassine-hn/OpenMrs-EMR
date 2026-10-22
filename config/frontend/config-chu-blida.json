@@ -10,7 +10,16 @@
         "remove": [
           "dispensing-link",
           "forms-app-link"
-        ]
+        ],
+        "add": [
+          "link#ohif"
+        ],
+        "configure": {
+          "link#ohif": {
+            "title": "Imagerie Médicale (OHIF / PACS)",
+            "target": "/ohif/"
+          }
+        }
       }
     }
   },
@@ -53,7 +62,8 @@
         ],
         "add": [
           "obs-by-encounter-widget#neuroGlasgow",
-          "obs-by-encounter-widget#neuroPupillesMotricite"
+          "obs-by-encounter-widget#neuroPupillesMotricite",
+          "imaging-summary-widget"
         ],
         "configure": {
           "obs-by-encounter-widget#neuroGlasgow": {

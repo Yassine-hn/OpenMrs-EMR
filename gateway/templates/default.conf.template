@@ -77,6 +77,19 @@ server {
     proxy_set_header Cookie $http_cookie;
   }
 
+  # Custom overrides for OpenMRS 3 routes and importmap
+  location = /openmrs/spa/routes.registry.json {
+    set $frontend http://frontend;
+    rewrite ^ /site/routes.registry.json break;
+    proxy_pass $frontend;
+  }
+
+  location = /openmrs/spa/importmap.json {
+    set $frontend http://frontend;
+    rewrite ^ /site/importmap.json break;
+    proxy_pass $frontend;
+  }
+
   # OpenMRS 3 Single Page Application (frontend)
   location /openmrs/spa/ {
     set $frontend http://frontend;

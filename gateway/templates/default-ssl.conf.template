@@ -107,6 +107,19 @@ server {
     return 301 /openmrs/spa/;
   }
 
+  # Custom overrides for OpenMRS 3 routes and importmap
+  location = /openmrs/spa/routes.registry.json {
+    set $frontend http://frontend;
+    rewrite ^ /site/routes.registry.json break;
+    proxy_pass $frontend;
+  }
+
+  location = /openmrs/spa/importmap.json {
+    set $frontend http://frontend;
+    rewrite ^ /site/importmap.json break;
+    proxy_pass $frontend;
+  }
+
   location /openmrs/spa/ {
     set $frontend http://frontend;
     rewrite ^/openmrs/spa/(.*) /$1 break;

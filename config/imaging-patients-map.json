@@ -1,0 +1,20 @@
+{
+  "100001W": {
+    "name": "TAMER Adem",
+    "uuid": "761f62d2-7903-4d71-9d2d-c2642263db13",
+    "externalId": "PAT-1020881",
+    "indication": "Processus expansif solido-kystique de la FCP (toit du V4 / vermis)"
+  },
+  "100002U": {
+    "name": "BOUSSEDRAYA Meriem",
+    "uuid": "7a9be64b-5885-451c-848f-96f3c1131010",
+    "externalId": "PAT-1329397",
+    "indication": "Processus de la fosse c\u00e9r\u00e9brale post\u00e9rieure + bilan m\u00e9dullaire"
+  },
+  "100003R": {
+    "name": "LARACHI Mohamed Anes",
+    "uuid": "a4238cb1-0579-4546-a893-0fade5d0bb54",
+    "externalId": "PAT-1076054, PAT-1106079",
+    "indication": "Suivi longitudinal IRM tumeur c\u00e9r\u00e9brale p\u00e9diatrique"
+  }
+}
