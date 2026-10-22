@@ -2,7 +2,7 @@
 
 | | |
 | --- | --- |
-| Status | **v2, decisions recorded 2026-10-10 (§6). Phase 2 DONE on 2026-10-10; Phase 3 DONE on 2026-10-15 (§7); Ready for Phase 4 (Imaging).** |
+| Status | **v2, decisions recorded 2026-10-10 (§6). Phase 2 DONE on 2026-10-10; Phase 3 DONE on 2026-10-15; Phase 4 (Imaging) DONE on 2026-10-21 (§7); Server 1 PRODUCTION-READY on 2026-10-22. Server 2 (AI) next.** |
 | Date | 2026-10-10 |
 | Target | Neurosurgery department, CHU Frantz Fanon, Blida. Fresh deployment, no data migration. |
 | Servers | **Server 1** (in the hospital, 8 GB RAM): O3 + Orthanc + OHIF. **Server 2** (GPU): AI, last phase. |
@@ -263,7 +263,9 @@ PDF with the CHU letterhead.
 
 **Phase 3 progress (2026-10-10 to 2026-10-15):** details in [`test-report-phase3.md`](test-report-phase3.md).
 - **Done and tested (Phase 3 completed 2026-10-15):** the print spike (operative report → PDF on the CHU layout); all 8 neurosurgery clinical forms: *Compte rendu opératoire*, *Évaluation neurologique* (calculated Glasgow total), *Demande d'admission*, *Consultation de neurochirurgie*, *Observation d'entrée* (admission note), *Résultat anatomopathologique* (WHO CNS5), *Décision RCP* (MDT neuro-oncology meeting), and *Consultation de suivi* (postoperative & neuro-oncology follow-up); Glasgow/Karnofsky and pupils/motor trends on the patient summary; 3 consultation services; consultation queue with French statuses; 42 beds in 3 wards; admission to a bed; French translation overrides; CIEL mapping checked in OCL, questions and answers mapped to CIEL concepts where available, with local concepts defined under `CHU-Blida` source with stable `uuid5` UUIDs; coded pre/post-operative diagnoses with 34 neurosurgical CIEL diagnoses (ICD-10 codes, French synonyms), also available in the visit note; PDF encounter printing verified on all forms; automated smoke test (12/12) and role permission checks (18/18) PASS.
-- **Phase 4 next:** Imaging (Orthanc 26.9.1 + OHIF 3.13.12 via gateway reverse proxy and session verification; CD/USB import flow; frontend imaging app `esm-neuro-imaging-app`).
+- **Phase 4 completed (2026-10-17 to 2026-10-21):** details in [`subplans/README.md`](subplans/README.md). Orthanc 26.9.1 PACS + PostgreSQL 16 Alpine index + OHIF 3.13.12 integrated behind Nginx gateway with `auth_request` OpenMRS session check. Single-spa micro-frontend `@openmrs/esm-neuro-imaging-app` embedded in O3 patient chart (imaging tab, series viewer, 1-click OHIF launch, CD/USB DICOM upload). Ingested 6,665 clinical DICOM slices (2.2 GB) from CHU Blida across 3 patients, 6 studies, and 65 series; reconciled external clinic tags with OpenMRS Dossier IDs (`100001W`, `100002U`, `100003R`); ingested 4 radiology reports as clinical attachments. All 10 imaging tests and 10 clinical dataset checks PASS.
+- **Server 1 Production Readiness (2026-10-22):** Complete automated 4-volume disaster recovery backup (`scripts/backup-all.sh`) and restore (`scripts/restore-all.sh`) verified across MariaDB, PostgreSQL, OpenMRS data, and Orthanc raw storage. Server 1 production deployment guide created (`docs/production-deployment-guide.md`). Server 1 is self-contained and ready for hospital pilot deployment.
+- **Next: Server 2 (AI/GPU services):** OHIF-AI segmentation/volumetry, clinical dictation, and assistant LLM on dedicated GPU hardware.
 
 Repository layout from Phase 2 on: `config/` (Initializer, frontend config, print
 layout), later `gateway/`, `modules/esm-neuro-imaging-app/` and `orthanc/`. One place,
