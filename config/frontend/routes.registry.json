@@ -3578,6 +3578,26 @@
         },
         "online": true,
         "offline": true
+      },
+      {
+        "name": "ai-assistant-dashboard-link",
+        "component": "aiAssistantDashboardLink",
+        "slot": "patient-chart-dashboard-slot",
+        "order": 11,
+        "meta": {
+          "slot": "patient-chart-ai-assistant-dashboard-slot",
+          "path": "assistant",
+          "title": "Assistant IA & Dictée"
+        },
+        "online": true,
+        "offline": true
+      },
+      {
+        "name": "ai-assistant-dashboard-page",
+        "component": "aiAssistantDashboardPage",
+        "slot": "patient-chart-ai-assistant-dashboard-slot",
+        "online": true,
+        "offline": true
       }
     ],
     "pages": [],

@@ -161,6 +161,8 @@ services:
     ports:
       # DICOM C-STORE for hospital modalities / PACS network
       - "4242:4242"
+      # Orthanc REST / DICOMweb API for Server 2 AI and integration
+      - "8042:8042"
     volumes:
       - ./config/orthanc:/etc/orthanc:ro
       - orthanc-storage:/var/lib/orthanc/storage

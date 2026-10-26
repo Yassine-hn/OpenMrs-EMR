@@ -1,5 +1,5 @@
 map $request_uri $csp_header {
-  default "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: localhost localhost:*; worker-src 'self' blob:; child-src 'self' blob:; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob:; base-uri 'self'; frame-ancestors 'self' ${FRAME_ANCESTORS};";
+  default "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: localhost localhost:*; worker-src 'self' blob:; child-src 'self' blob:; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: http://10.0.211.250:*; frame-src 'self' http://10.0.211.250:*; base-uri 'self'; frame-ancestors 'self' ${FRAME_ANCESTORS};";
   "~^/openmrs/(?:admin|dictionary|module|patientDashboard.form)/" "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; base-uri 'self'; font-src 'self'; frame-ancestors 'self';";
   "~^/openmrs/owa" "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; base-uri 'self'; font-src 'self' data:; img-src 'self' data:; frame-ancestors 'self';";
 }
@@ -135,6 +135,59 @@ server {
 
   location = /dicom-web {
     return 301 /dicom-web/;
+  }
+
+  # Server 2 - OHIF-AI Web Viewer (MedSAM2 / nnInteractive / MONAI Label)
+  location /ohif-ai/ {
+    auth_request /_auth_openmrs;
+    proxy_pass http://10.0.211.250:1026/;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $forwarded_ip;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    proxy_read_timeout 300s;
+    proxy_send_timeout 300s;
+  }
+
+  location = /ohif-ai {
+    return 301 /ohif-ai/;
+  }
+
+  # Server 2 - AI Clinical Assistant & Dictation API (MedGemma + Qwen3-ASR)
+  location /api/clinical-assistant/ {
+    auth_request /_auth_openmrs;
+    proxy_pass http://10.0.211.250:8000/;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $forwarded_ip;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    client_max_body_size 50M;
+    proxy_read_timeout 180s;
+    proxy_send_timeout 180s;
+  }
+
+  location = /api/clinical-assistant {
+    return 301 /api/clinical-assistant/;
+  }
+
+  # Direct alias for STT transcription
+  location /api/stt/ {
+    auth_request /_auth_openmrs;
+    proxy_pass http://10.0.211.250:8000/;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $forwarded_ip;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    client_max_body_size 50M;
+    proxy_read_timeout 180s;
+    proxy_send_timeout 180s;
+  }
+
+  location = /api/stt {
+    return 301 /api/stt/;
   }
 
   location = /openmrs/spa/ {

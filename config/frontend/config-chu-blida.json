@@ -12,12 +12,17 @@
           "forms-app-link"
         ],
         "add": [
-          "link#ohif"
+          "link#ohif",
+          "link#ohif-ai"
         ],
         "configure": {
           "link#ohif": {
             "title": "Imagerie Médicale (OHIF / PACS)",
             "target": "/ohif/"
+          },
+          "link#ohif-ai": {
+            "title": "Station OHIF-AI (Segmentation & Mesures)",
+            "target": "/ohif-ai/"
           }
         }
       }
