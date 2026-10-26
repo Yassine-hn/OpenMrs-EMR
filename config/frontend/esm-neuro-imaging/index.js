@@ -285,6 +285,52 @@
     return await res.json();
   }
 
+  // --- Constantes & Helpers OpenMRS Encounter (CHU Frantz Fanon Blida) ---
+  var ENCOUNTER_TYPES = {
+    OPERATIVE_REPORT: 'd0376b3b-cda1-58c5-9789-afe910505c5f', // Compte rendu opératoire
+    DISCHARGE: '181820aa-88c9-479b-9077-af92f5364329',        // Sortie
+    CONSULTATION: '1f331153-e484-554a-9184-1d45a2399166'       // Consultation de neurochirurgie
+  };
+
+  var ENCOUNTER_LOCATIONS = {
+    BLOC_OPERATOIRE: 'f5fb4913-6cbd-4535-a6a9-299bd3c0f9a0',   // Bloc opératoire
+    CONSULTATIONS: '795d1d96-f5fb-4966-bea0-753525a24d71',     // Consultations de neurochirurgie
+    HOSPITALISATION: '0b7cbcef-c154-4fb4-b6d5-80c0e3b5b869'   // Service de neurochirurgie
+  };
+
+  var CONCEPTS = {
+    PROCEDURE_DESCRIPTION: '84dbb8b4-af34-525c-b9b9-db4989c04df1', // Description de l'intervention
+    ENCOUNTER_NOTE_TEXT: '162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'     // Text of encounter note
+  };
+
+  var CLINICIAN_ENCOUNTER_ROLE = '240b26f9-dd88-4172-823d-4a8bfeb7841f'; // Clinicien
+
+  async function getCurrentProviderUuid() {
+    try {
+      var res = await fetch('/openmrs/ws/rest/v1/session');
+      if (!res.ok) return null;
+      var data = await res.json();
+      return data && data.currentProvider ? data.currentProvider.uuid : null;
+    } catch (e) {
+      console.warn('Impossible de récupérer le provider actif:', e);
+      return null;
+    }
+  }
+
+  async function apiSaveEncounter(payload) {
+    var res = await fetch('/openmrs/ws/rest/v1/encounter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      var err = await res.json().catch(function () { return {}; });
+      var msg = err.error && err.error.message ? err.error.message : ('Erreur OpenMRS (' + res.status + ')');
+      throw new Error(msg);
+    }
+    return await res.json();
+  }
+
   // ==========================================
   // 1. Sidebar Dashboard Links
   // ==========================================
@@ -293,6 +339,7 @@
       bootstrap: async function () {},
       mount: async function (props) {
         var patientUuid = getPatientUuid(props);
+        ensureFloatingDictationFab();
         var dom = props.domElement;
         var chartBase = '/openmrs/spa/patient/' + patientUuid + '/chart';
         var targetUrl = chartBase + '/imaging';
@@ -334,6 +381,7 @@
       bootstrap: async function () {},
       mount: async function (props) {
         var patientUuid = getPatientUuid(props);
+        ensureFloatingDictationFab();
         var dom = props.domElement;
         var chartBase = '/openmrs/spa/patient/' + patientUuid + '/chart';
         var targetUrl = chartBase + '/assistant';
@@ -378,6 +426,7 @@
       bootstrap: async function () {},
       mount: async function (props) {
         var patientUuid = getPatientUuid(props);
+        ensureFloatingDictationFab();
         var dom = props.domElement;
 
         dom.innerHTML = [
@@ -645,6 +694,7 @@
       bootstrap: async function () {},
       mount: async function (props) {
         var patientUuid = getPatientUuid(props);
+        ensureFloatingDictationFab();
         var dom = props.domElement;
         dom.innerHTML = '<div style="padding:16px; background:#fff; border:1px solid #e0e0e0; border-radius:4px; font-size:13px; color:#525252;">Chargement imagerie PACS...</div>';
 
@@ -860,14 +910,16 @@
           '        </div>',
           '',
           '        <div id="op-report-result-box" style="display:none; margin-top:24px; border-top:1px solid #e0e0e0; padding-top:20px;">',
-          '          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">',
-          '            <h4 style="margin:0; font-size:15px; font-weight:600; color:#005d5d;">Brouillon généré par MedGemma (CHU Blida) :</h4>',
-          '            <div style="display:flex; gap:8px;">',
-          '              <button id="btn-copy-op-draft" style="background:#005d5d; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer;">📋 Copier le compte-rendu</button>',
+          '          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">',
+          '            <h4 style="margin:0; font-size:15px; font-weight:600; color:#005d5d;">Compte-rendu opératoire rédigé par MedGemma IA :</h4>',
+          '            <div style="display:flex; gap:8px; flex-wrap:wrap;">',
+          '              <button id="btn-save-op-openmrs" style="background:#0f62fe; color:#fff; border:none; padding:7px 16px; border-radius:4px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><span>💾 Enregistrer dans le dossier OpenMRS</span></button>',
+          '              <button id="btn-copy-op-draft" style="background:#005d5d; color:#fff; border:none; padding:7px 14px; border-radius:4px; font-size:13px; font-weight:600; cursor:pointer;">📋 Copier</button>',
           '            </div>',
           '          </div>',
-          '          <pre id="op-report-text" style="background:#f4f7f7; border:1px solid #005d5d; border-radius:6px; padding:16px; font-family:Courier New, monospace; font-size:13px; line-height:1.5; white-space:pre-wrap; color:#161616; max-height:400px; overflow-y:auto;"></pre>',
+          '          <textarea id="op-report-text" rows="14" style="width:100%; box-sizing:border-box; background:#f4f7f7; border:1px solid #005d5d; border-radius:6px; padding:16px; font-family:\'Courier New\', Courier, monospace; font-size:13px; line-height:1.5; color:#161616; resize:vertical;"></textarea>',
           '          <div id="op-report-meta" style="font-size:11px; color:#525252; margin-top:6px;"></div>',
+          '          <div id="op-save-status" style="margin-top:12px; display:none;"></div>',
           '        </div>',
           '      </div>',
           '    </div>',
@@ -910,12 +962,16 @@
           '        </div>',
           '',
           '        <div id="discharge-result-box" style="display:none; margin-top:24px; border-top:1px solid #e0e0e0; padding-top:20px;">',
-          '          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">',
-          '            <h4 style="margin:0; font-size:15px; font-weight:600; color:#005d5d;">Lettre de Sortie générée par MedGemma :</h4>',
-          '            <button id="btn-copy-dc-draft" style="background:#005d5d; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer;">📋 Copier la lettre</button>',
+          '          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">',
+          '            <h4 style="margin:0; font-size:15px; font-weight:600; color:#005d5d;">Lettre de Sortie rédigée par MedGemma IA :</h4>',
+          '            <div style="display:flex; gap:8px; flex-wrap:wrap;">',
+          '              <button id="btn-save-dc-openmrs" style="background:#0f62fe; color:#fff; border:none; padding:7px 16px; border-radius:4px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><span>💾 Enregistrer dans le dossier OpenMRS</span></button>',
+          '              <button id="btn-copy-dc-draft" style="background:#005d5d; color:#fff; border:none; padding:7px 14px; border-radius:4px; font-size:13px; font-weight:600; cursor:pointer;">📋 Copier</button>',
+          '            </div>',
           '          </div>',
-          '          <pre id="discharge-text" style="background:#f4f7f7; border:1px solid #005d5d; border-radius:6px; padding:16px; font-family:Courier New, monospace; font-size:13px; line-height:1.5; white-space:pre-wrap; color:#161616; max-height:400px; overflow-y:auto;"></pre>',
+          '          <textarea id="discharge-text" rows="14" style="width:100%; box-sizing:border-box; background:#f4f7f7; border:1px solid #005d5d; border-radius:6px; padding:16px; font-family:\'Courier New\', Courier, monospace; font-size:13px; line-height:1.5; color:#161616; resize:vertical;"></textarea>',
           '          <div id="discharge-meta" style="font-size:11px; color:#525252; margin-top:6px;"></div>',
+          '          <div id="dc-save-status" style="margin-top:12px; display:none;"></div>',
           '        </div>',
           '      </div>',
           '    </div>',
@@ -1145,9 +1201,10 @@
 
             try {
               var result = await apiDraftOperativeReport(payload);
-              opReportText.textContent = result.draft_text;
+              opReportText.value = result.draft_text;
               opReportMeta.textContent = 'Généré par ' + result.model_used + ' en ' + (result.latency_ms / 1000).toFixed(2) + 's sur GPU RTX 5070 Ti.';
               opResultBox.style.display = 'block';
+              if (opSaveStatus) opSaveStatus.style.display = 'none';
               opResultBox.scrollIntoView({ behavior: 'smooth' });
             } catch (err) {
               alert('Erreur lors de la génération : ' + err.message);
@@ -1158,11 +1215,77 @@
           });
         }
 
+        var saveOpBtn = dom.querySelector('#btn-save-op-openmrs');
+        var opSaveStatus = dom.querySelector('#op-save-status');
+
+        if (saveOpBtn) {
+          saveOpBtn.addEventListener('click', async function () {
+            var textToSave = (opReportText.value || opReportText.textContent || '').trim();
+            if (!textToSave) {
+              alert('Le compte-rendu est vide.');
+              return;
+            }
+            if (!patientUuid) {
+              alert('Impossible d\'identifier le patient pour l\'enregistrement.');
+              return;
+            }
+
+            saveOpBtn.disabled = true;
+            saveOpBtn.innerHTML = '<span>⏳ Enregistrement dans OpenMRS...</span>';
+            if (opSaveStatus) opSaveStatus.style.display = 'none';
+
+            try {
+              var providerUuid = await getCurrentProviderUuid();
+              var nowIso = new Date().toISOString();
+              var encounterPayload = {
+                encounterDatetime: nowIso,
+                patient: patientUuid,
+                encounterType: ENCOUNTER_TYPES.OPERATIVE_REPORT,
+                location: ENCOUNTER_LOCATIONS.BLOC_OPERATOIRE,
+                encounterProviders: providerUuid ? [{
+                  provider: providerUuid,
+                  encounterRole: CLINICIAN_ENCOUNTER_ROLE
+                }] : [],
+                obs: [
+                  {
+                    concept: CONCEPTS.PROCEDURE_DESCRIPTION,
+                    value: textToSave
+                  }
+                ]
+              };
+
+              var enc = await apiSaveEncounter(encounterPayload);
+              if (opSaveStatus) {
+                opSaveStatus.innerHTML = [
+                  '<div style="background:#defbe6; border-left:4px solid #24a148; color:#0f5123; padding:12px 16px; border-radius:4px; font-size:13px;">',
+                  '  <strong>✅ Compte-rendu opératoire enregistré avec succès dans le dossier OpenMRS !</strong>',
+                  '  <div style="font-size:12px; margin-top:4px; color:#525252;">Type: Compte rendu opératoire • Lieu: Bloc opératoire • ID: <code>' + enc.uuid + '</code></div>',
+                  '</div>'
+                ].join('');
+                opSaveStatus.style.display = 'block';
+              }
+              saveOpBtn.innerHTML = '<span>✅ Enregistré dans le dossier</span>';
+              saveOpBtn.style.background = '#24a148';
+            } catch (err) {
+              if (opSaveStatus) {
+                opSaveStatus.innerHTML = [
+                  '<div style="background:#fff1f1; border-left:4px solid #da1e28; color:#750e13; padding:12px 16px; border-radius:4px; font-size:13px;">',
+                  '  <strong>❌ Erreur lors de l\'enregistrement :</strong> ' + err.message,
+                  '</div>'
+                ].join('');
+                opSaveStatus.style.display = 'block';
+              }
+              saveOpBtn.disabled = false;
+              saveOpBtn.innerHTML = '<span>💾 Réessayer l\'enregistrement</span>';
+            }
+          });
+        }
+
         if (copyOpBtn) {
           copyOpBtn.addEventListener('click', function () {
-            navigator.clipboard.writeText(opReportText.textContent);
-            copyOpBtn.textContent = '✅ Compte-rendu copié !';
-            setTimeout(function () { copyOpBtn.textContent = '📋 Copier le compte-rendu'; }, 2000);
+            navigator.clipboard.writeText(opReportText.value || opReportText.textContent);
+            copyOpBtn.textContent = '✅ Copié !';
+            setTimeout(function () { copyOpBtn.textContent = '📋 Copier'; }, 2000);
           });
         }
 
@@ -1200,9 +1323,10 @@
 
             try {
               var result = await apiDraftDischargeLetter(payload);
-              dcReportText.textContent = result.draft_text;
+              dcReportText.value = result.draft_text;
               dcReportMeta.textContent = 'Généré par ' + result.model_used + ' en ' + (result.latency_ms / 1000).toFixed(2) + 's sur GPU RTX 5070 Ti.';
               dcResultBox.style.display = 'block';
+              if (dcSaveStatus) dcSaveStatus.style.display = 'none';
               dcResultBox.scrollIntoView({ behavior: 'smooth' });
             } catch (err) {
               alert('Erreur lors de la génération : ' + err.message);
@@ -1213,11 +1337,77 @@
           });
         }
 
+        var saveDcBtn = dom.querySelector('#btn-save-dc-openmrs');
+        var dcSaveStatus = dom.querySelector('#dc-save-status');
+
+        if (saveDcBtn) {
+          saveDcBtn.addEventListener('click', async function () {
+            var textToSave = (dcReportText.value || dcReportText.textContent || '').trim();
+            if (!textToSave) {
+              alert('La lettre de sortie est vide.');
+              return;
+            }
+            if (!patientUuid) {
+              alert('Impossible d\'identifier le patient pour l\'enregistrement.');
+              return;
+            }
+
+            saveDcBtn.disabled = true;
+            saveDcBtn.innerHTML = '<span>⏳ Enregistrement dans OpenMRS...</span>';
+            if (dcSaveStatus) dcSaveStatus.style.display = 'none';
+
+            try {
+              var providerUuid = await getCurrentProviderUuid();
+              var nowIso = new Date().toISOString();
+              var encounterPayload = {
+                encounterDatetime: nowIso,
+                patient: patientUuid,
+                encounterType: ENCOUNTER_TYPES.DISCHARGE,
+                location: ENCOUNTER_LOCATIONS.CONSULTATIONS,
+                encounterProviders: providerUuid ? [{
+                  provider: providerUuid,
+                  encounterRole: CLINICIAN_ENCOUNTER_ROLE
+                }] : [],
+                obs: [
+                  {
+                    concept: CONCEPTS.ENCOUNTER_NOTE_TEXT,
+                    value: textToSave
+                  }
+                ]
+              };
+
+              var enc = await apiSaveEncounter(encounterPayload);
+              if (dcSaveStatus) {
+                dcSaveStatus.innerHTML = [
+                  '<div style="background:#defbe6; border-left:4px solid #24a148; color:#0f5123; padding:12px 16px; border-radius:4px; font-size:13px;">',
+                  '  <strong>✅ Lettre de sortie enregistrée avec succès dans le dossier OpenMRS !</strong>',
+                  '  <div style="font-size:12px; margin-top:4px; color:#525252;">Type: Sortie • Lieu: Consultations de neurochirurgie • ID: <code>' + enc.uuid + '</code></div>',
+                  '</div>'
+                ].join('');
+                dcSaveStatus.style.display = 'block';
+              }
+              saveDcBtn.innerHTML = '<span>✅ Enregistré dans le dossier</span>';
+              saveDcBtn.style.background = '#24a148';
+            } catch (err) {
+              if (dcSaveStatus) {
+                dcSaveStatus.innerHTML = [
+                  '<div style="background:#fff1f1; border-left:4px solid #da1e28; color:#750e13; padding:12px 16px; border-radius:4px; font-size:13px;">',
+                  '  <strong>❌ Erreur lors de l\'enregistrement :</strong> ' + err.message,
+                  '</div>'
+                ].join('');
+                dcSaveStatus.style.display = 'block';
+              }
+              saveDcBtn.disabled = false;
+              saveDcBtn.innerHTML = '<span>💾 Réessayer l\'enregistrement</span>';
+            }
+          });
+        }
+
         if (copyDcBtn) {
           copyDcBtn.addEventListener('click', function () {
-            navigator.clipboard.writeText(dcReportText.textContent);
-            copyDcBtn.textContent = '✅ Lettre copiée !';
-            setTimeout(function () { copyDcBtn.textContent = '📋 Copier la lettre'; }, 2000);
+            navigator.clipboard.writeText(dcReportText.value || dcReportText.textContent);
+            copyDcBtn.textContent = '✅ Copié !';
+            setTimeout(function () { copyDcBtn.textContent = '📋 Copier'; }, 2000);
           });
         }
 
@@ -1336,10 +1526,228 @@
           });
         }
 
+        // Assurer que le FAB est monté
+        ensureFloatingDictationFab();
+
       },
       unmount: async function (props) { if (props.domElement) props.domElement.innerHTML = ''; },
       update: async function () {}
     };
+  }
+
+  // ==========================================
+  // 5. Floating Universal Voice Dictation Widget (FAB)
+  // Accessible across all clinical forms in OpenMRS 3.x
+  // ==========================================
+  var globalLastFocusedInput = null;
+
+  if (typeof document !== 'undefined') {
+    document.addEventListener('focusin', function (e) {
+      if (e.target && (e.target.tagName === 'TEXTAREA' || (e.target.tagName === 'INPUT' && (e.target.type === 'text' || !e.target.type)))) {
+        if (!e.target.closest('#chu-floating-dictation-root')) {
+          globalLastFocusedInput = e.target;
+        }
+      }
+    });
+  }
+
+  function ensureFloatingDictationFab() {
+    if (typeof document === 'undefined' || document.getElementById('chu-floating-dictation-root')) {
+      return;
+    }
+
+    var container = document.createElement('div');
+    container.id = 'chu-floating-dictation-root';
+    container.innerHTML = [
+      '<!-- Floating Action Button (FAB) -->',
+      '<div id="chu-dictation-fab-btn" title="Dictée Vocale Médicale IA (Qwen3-ASR local)" style="position:fixed; bottom:24px; right:24px; width:54px; height:54px; border-radius:27px; background:#005d5d; color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 16px rgba(0,0,0,0.28); cursor:pointer; z-index:99999; user-select:none; transition:transform 0.2s, background 0.2s;">',
+      '  <span id="chu-fab-icon">🎙️</span>',
+      '</div>',
+      '<!-- Floating Dictation Card / Drawer -->',
+      '<div id="chu-dictation-card" style="display:none; position:fixed; bottom:88px; right:24px; width:380px; max-width:calc(100vw - 48px); background:#ffffff; border-radius:10px; box-shadow:0 8px 30px rgba(0,0,0,0.25); border:1px solid #c6c6c6; z-index:99999; font-family:-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif; overflow:hidden; flex-direction:column;">',
+      '  <!-- Card Header -->',
+      '  <div style="background:#005d5d; color:#fff; padding:12px 16px; display:flex; justify-content:space-between; align-items:center;">',
+      '    <div style="display:flex; align-items:center; gap:8px;">',
+      '      <span style="font-size:18px;">🎙️</span>',
+      '      <div>',
+      '        <div style="font-weight:600; font-size:13px; line-height:1.2;">Dictée Médicale Universelle</div>',
+      '        <div style="font-size:10px; color:#c6e7e7;">Qwen3-ASR • GPU Serveur 2 CHU Blida</div>',
+      '      </div>',
+      '    </div>',
+      '    <button id="chu-fab-close-card" style="background:transparent; border:none; color:#fff; font-size:18px; cursor:pointer; line-height:1; padding:2px 6px;">✕</button>',
+      '  </div>',
+      '  <!-- Card Body -->',
+      '  <div style="padding:14px;">',
+      '    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">',
+      '      <button id="chu-fab-rec-btn" style="background:#005d5d; color:#fff; border:none; border-radius:20px; padding:7px 16px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">',
+      '        <span id="chu-fab-rec-dot">🎙️</span>',
+      '        <span id="chu-fab-rec-text">Démarrer la dictée</span>',
+      '      </button>',
+      '      <span id="chu-fab-timer" style="display:none; font-family:monospace; font-size:13px; font-weight:700; color:#da1e28;">00:00</span>',
+      '      <span id="chu-fab-status" style="font-size:11px; color:#525252;">Micro prêt</span>',
+      '    </div>',
+      '    <textarea id="chu-fab-transcript-text" rows="5" style="width:100%; box-sizing:border-box; padding:10px; border:1px solid #8d8d8d; border-radius:6px; font-size:13px; line-height:1.4; resize:vertical; font-family:inherit; color:#161616;" placeholder="Le texte dicté apparaîtra ici. Vous pouvez le corriger avant de l\'insérer dans votre formulaire..."></textarea>',
+      '    <!-- Toolbar Actions -->',
+      '    <div style="display:flex; gap:6px; margin-top:10px;">',
+      '      <button id="chu-fab-insert-btn" title="Insérer le texte transcrit directement dans le formulaire actif" style="flex:2; background:#0f62fe; color:#fff; border:none; padding:7px 12px; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">',
+      '        <span>✍️ Insérer dans le formulaire</span>',
+      '      </button>',
+      '      <button id="chu-fab-copy-btn" title="Copier le texte transcrit" style="flex:1; background:#f4f4f4; border:1px solid #8d8d8d; color:#161616; padding:7px 10px; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer;">',
+      '        <span>📋 Copier</span>',
+      '      </button>',
+      '      <button id="chu-fab-clear-btn" title="Effacer la zone de dictée" style="background:#f4f4f4; border:1px solid #8d8d8d; color:#525252; padding:7px 10px; border-radius:4px; font-size:12px; cursor:pointer;">',
+      '        <span>🧹</span>',
+      '      </button>',
+      '    </div>',
+      '    <div id="chu-fab-target-hint" style="font-size:11px; color:#525252; margin-top:8px; font-style:italic;">',
+      '      Astuce: Cliquez dans n\'importe quel champ du dossier patient, puis cliquez sur <strong>Insérer</strong>.',
+      '    </div>',
+      '  </div>',
+      '</div>'
+    ].join('');
+
+    document.body.appendChild(container);
+
+    var fabBtn = document.getElementById('chu-dictation-fab-btn');
+    var card = document.getElementById('chu-dictation-card');
+    var closeBtn = document.getElementById('chu-fab-close-card');
+    var recBtn = document.getElementById('chu-fab-rec-btn');
+    var recDot = document.getElementById('chu-fab-rec-dot');
+    var recText = document.getElementById('chu-fab-rec-text');
+    var timerEl = document.getElementById('chu-fab-timer');
+    var statusEl = document.getElementById('chu-fab-status');
+    var transcriptEl = document.getElementById('chu-fab-transcript-text');
+    var insertBtn = document.getElementById('chu-fab-insert-btn');
+    var copyBtn = document.getElementById('chu-fab-copy-btn');
+    var clearBtn = document.getElementById('chu-fab-clear-btn');
+    var targetHint = document.getElementById('chu-fab-target-hint');
+
+    var recorder = new AudioRecorder();
+    var timerInterval = null;
+    var durationSeconds = 0;
+
+    fabBtn.addEventListener('click', function () {
+      if (card.style.display === 'none' || !card.style.display) {
+        card.style.display = 'flex';
+        fabBtn.style.transform = 'scale(0.92)';
+      } else {
+        card.style.display = 'none';
+        fabBtn.style.transform = 'scale(1)';
+      }
+    });
+
+    closeBtn.addEventListener('click', function () {
+      card.style.display = 'none';
+      fabBtn.style.transform = 'scale(1)';
+    });
+
+    recBtn.addEventListener('click', async function () {
+      if (!recorder.isRecording) {
+        try {
+          await recorder.start();
+          recBtn.style.background = '#da1e28';
+          recDot.textContent = '⏹️';
+          recText.textContent = 'Arrêter l\'écoute';
+          timerEl.style.display = 'inline-block';
+          statusEl.textContent = 'Écoute en cours...';
+          statusEl.style.color = '#da1e28';
+          durationSeconds = 0;
+          timerEl.textContent = '00:00';
+
+          timerInterval = setInterval(function () {
+            durationSeconds++;
+            var m = String(Math.floor(durationSeconds / 60)).padStart(2, '0');
+            var s = String(durationSeconds % 60).padStart(2, '0');
+            timerEl.textContent = m + ':' + s;
+            if (durationSeconds >= 45) {
+              recBtn.click();
+            }
+          }, 1000);
+        } catch (e) {
+          alert('Impossible d\'activer le microphone : ' + e.message);
+        }
+      } else {
+        clearInterval(timerInterval);
+        recBtn.style.background = '#005d5d';
+        recDot.textContent = '🎙️';
+        recText.textContent = 'Démarrer la dictée';
+        timerEl.style.display = 'none';
+        statusEl.textContent = 'Transcription Qwen3...';
+        statusEl.style.color = '#6929c4';
+
+        try {
+          var wavBlob = await recorder.stop();
+          var res = await apiTranscribeAudio(wavBlob, 'Neurochirurgie, CHU Frantz Fanon Blida');
+          if (res && res.text) {
+            var prev = transcriptEl.value.trim();
+            transcriptEl.value = prev ? (prev + ' ' + res.text) : res.text;
+            statusEl.textContent = 'Terminé (' + (res.duration_seconds || durationSeconds) + 's)';
+            statusEl.style.color = '#24a148';
+          } else {
+            statusEl.textContent = 'Aucune voix détectée';
+            statusEl.style.color = '#525252';
+          }
+        } catch (err) {
+          statusEl.textContent = 'Erreur';
+          statusEl.style.color = '#da1e28';
+          alert('Erreur transcription : ' + err.message);
+        }
+      }
+    });
+
+    insertBtn.addEventListener('click', function () {
+      var textToInsert = transcriptEl.value.trim();
+      if (!textToInsert) {
+        alert('Aucun texte à insérer. Dictez d\'abord votre texte.');
+        return;
+      }
+
+      if (globalLastFocusedInput && document.body.contains(globalLastFocusedInput)) {
+        var el = globalLastFocusedInput;
+        var start = el.selectionStart || el.value.length;
+        var end = el.selectionEnd || el.value.length;
+        var val = el.value || '';
+        var prefix = (start > 0 && val[start - 1] !== ' ' && val[start - 1] !== '\n') ? ' ' : '';
+        el.value = val.substring(0, start) + prefix + textToInsert + val.substring(end);
+
+        // Déclencher les événements React/Carbon pour prise en compte immédiate
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+        el.focus();
+
+        insertBtn.innerHTML = '<span>✅ Inséré avec succès !</span>';
+        insertBtn.style.background = '#24a148';
+        setTimeout(function () {
+          insertBtn.innerHTML = '<span>✍️ Insérer dans le formulaire</span>';
+          insertBtn.style.background = '#0f62fe';
+        }, 2000);
+      } else {
+        navigator.clipboard.writeText(textToInsert);
+        targetHint.innerHTML = '<span style="color:#0043ce; font-weight:600;">Texte copié dans le presse-papier ! Cliquez dans votre formulaire et collez (Ctrl+V).</span>';
+      }
+    });
+
+    copyBtn.addEventListener('click', function () {
+      if (!transcriptEl.value) return;
+      navigator.clipboard.writeText(transcriptEl.value);
+      copyBtn.innerHTML = '<span>✅ Copié !</span>';
+      setTimeout(function () { copyBtn.innerHTML = '<span>📋 Copier</span>'; }, 2000);
+    });
+
+    clearBtn.addEventListener('click', function () {
+      transcriptEl.value = '';
+      statusEl.textContent = 'Zone effacée';
+      statusEl.style.color = '#525252';
+    });
+  }
+
+  // Auto-injection du FAB
+  if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(ensureFloatingDictationFab, 800); });
+    } else {
+      setTimeout(ensureFloatingDictationFab, 800);
+    }
   }
 
   // ==========================================
