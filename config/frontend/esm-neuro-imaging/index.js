@@ -331,6 +331,27 @@
     return await res.json();
   }
 
+  async function apiUpdatePatientAddress(patientUuid, address1, cityVillage) {
+    var res = await fetch('/openmrs/ws/rest/v1/person/' + patientUuid, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        addresses: [
+          {
+            address1: address1,
+            cityVillage: cityVillage
+          }
+        ]
+      })
+    });
+    if (!res.ok) {
+      var err = await res.json().catch(function () { return {}; });
+      var msg = err.error && err.error.message ? err.error.message : ('Erreur OpenMRS (' + res.status + ')');
+      throw new Error(msg);
+    }
+    return await res.json();
+  }
+
   // ==========================================
   // 1. Sidebar Dashboard Links
   // ==========================================
@@ -986,9 +1007,10 @@
           '        ',
           '        <!-- Suggestions rapides -->',
           '        <div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;">',
+          '          <button class="chat-chip" data-prompt="Modifie l\'adresse du patient : 15 Rue des Martyrs, Blida" style="background:#e8f4f4; border:1px solid #005d5d; color:#005d5d; border-radius:14px; padding:4px 10px; font-size:12px; font-weight:600; cursor:pointer;">⚡ Modifier adresse</button>',
+          '          <button class="chat-chip" data-prompt="Enregistre une note de consultation : Examen neurologique satisfaisant, GCS 15/15, cicatrice opératoire propre." style="background:#e8f4f4; border:1px solid #005d5d; color:#005d5d; border-radius:14px; padding:4px 10px; font-size:12px; font-weight:600; cursor:pointer;">⚡ Note de consultation</button>',
+          '          <button class="chat-chip" data-prompt="Ajoute le diagnostic : Méningiome parasagittal frontal" style="background:#e8f4f4; border:1px solid #005d5d; color:#005d5d; border-radius:14px; padding:4px 10px; font-size:12px; font-weight:600; cursor:pointer;">⚡ Ajouter diagnostic</button>',
           '          <button class="chat-chip" data-prompt="Quelles sont les indications opératoires urgentes dans l\'hématome sous-dural chronique ?" style="background:#edf5ff; border:1px solid #d0e2ff; color:#0043ce; border-radius:14px; padding:4px 10px; font-size:12px; cursor:pointer;">Indications HSDC</button>',
-          '          <button class="chat-chip" data-prompt="Rappelle-moi les critères de la classification de Spetzler-Martin pour les malformations artério-veineuses cérébrales." style="background:#edf5ff; border:1px solid #d0e2ff; color:#0043ce; border-radius:14px; padding:4px 10px; font-size:12px; cursor:pointer;">Score Spetzler-Martin MAV</button>',
-          '          <button class="chat-chip" data-prompt="Quelle est la conduite à tenir devant un score de Glasgow à 8 post-traumatique ?" style="background:#edf5ff; border:1px solid #d0e2ff; color:#0043ce; border-radius:14px; padding:4px 10px; font-size:12px; cursor:pointer;">CAT Glasgow 8</button>',
           '          <button class="chat-chip" data-prompt="Quel est le protocole d\'antibiothérapie prophylactique pour une craniotomie programmée ?" style="background:#edf5ff; border:1px solid #d0e2ff; color:#0043ce; border-radius:14px; padding:4px 10px; font-size:12px; cursor:pointer;">Antibioprophylaxie crâne</button>',
           '        </div>',
           '',
@@ -1419,7 +1441,7 @@
         var chatChips = dom.querySelectorAll('.chat-chip');
         var conversationHistory = [];
 
-        function appendChatMessage(role, text) {
+        function appendChatMessage(role, text, action) {
           var isUser = role === 'user';
           var msgDiv = document.createElement('div');
           msgDiv.style.borderRadius = '8px';
@@ -1444,6 +1466,158 @@
 
           msgDiv.appendChild(roleHeader);
           msgDiv.appendChild(bodyDiv);
+
+          // Carte d'Action Interactive (Human-in-the-Loop)
+          if (!isUser && action && action.action_type) {
+            var actionCard = document.createElement('div');
+            actionCard.className = 'omrs-ai-action-card';
+            actionCard.style.marginTop = '12px';
+            actionCard.style.padding = '12px 14px';
+            actionCard.style.background = '#ffffff';
+            actionCard.style.border = '1.5px solid #005d5d';
+            actionCard.style.borderRadius = '6px';
+            actionCard.style.boxShadow = '0 2px 6px rgba(0,0,0,0.06)';
+
+            var actionHeader = document.createElement('div');
+            actionHeader.style.display = 'flex';
+            actionHeader.style.alignItems = 'center';
+            actionHeader.style.gap = '6px';
+            actionHeader.style.marginBottom = '8px';
+            actionHeader.innerHTML = '<span style="font-size:15px;">⚡</span><strong style="color:#005d5d; font-size:13px;">Action proposée dans OpenMRS : ' + (action.action_label || 'Action clinique') + '</strong>';
+
+            var previewBox = document.createElement('div');
+            previewBox.style.fontSize = '12px';
+            previewBox.style.color = '#393939';
+            previewBox.style.background = '#edf5ff';
+            previewBox.style.borderLeft = '3px solid #0f62fe';
+            previewBox.style.padding = '8px 10px';
+            previewBox.style.borderRadius = '3px';
+            previewBox.style.marginBottom = '10px';
+            previewBox.textContent = action.preview_text || 'Action prête à être validée.';
+
+            var buttonGroup = document.createElement('div');
+            buttonGroup.style.display = 'flex';
+            buttonGroup.style.gap = '8px';
+            buttonGroup.style.alignItems = 'center';
+
+            var confirmBtn = document.createElement('button');
+            confirmBtn.className = 'btn-confirm-ai-action';
+            confirmBtn.innerHTML = '✅ Confirmer & Appliquer dans OpenMRS';
+            confirmBtn.style.background = '#005d5d';
+            confirmBtn.style.color = '#fff';
+            confirmBtn.style.border = 'none';
+            confirmBtn.style.padding = '8px 14px';
+            confirmBtn.style.borderRadius = '4px';
+            confirmBtn.style.fontSize = '12px';
+            confirmBtn.style.fontWeight = '600';
+            confirmBtn.style.cursor = 'pointer';
+
+            var cancelBtn = document.createElement('button');
+            cancelBtn.innerHTML = 'Annuler';
+            cancelBtn.style.background = '#f4f4f4';
+            cancelBtn.style.color = '#525252';
+            cancelBtn.style.border = '1px solid #c6c6c6';
+            cancelBtn.style.padding = '8px 12px';
+            cancelBtn.style.borderRadius = '4px';
+            cancelBtn.style.fontSize = '12px';
+            cancelBtn.style.cursor = 'pointer';
+
+            var statusMsg = document.createElement('div');
+            statusMsg.style.display = 'none';
+            statusMsg.style.marginTop = '10px';
+            statusMsg.style.fontSize = '12px';
+
+            confirmBtn.addEventListener('click', async function () {
+              confirmBtn.disabled = true;
+              cancelBtn.style.display = 'none';
+              confirmBtn.innerHTML = '⏳ Application en cours dans OpenMRS...';
+
+              try {
+                if (action.action_type === 'update_patient_address') {
+                  var addr1 = action.parameters.address1 || '';
+                  var city = action.parameters.cityVillage || 'Blida';
+                  await apiUpdatePatientAddress(patientUuid, addr1, city);
+                  statusMsg.innerHTML = '<div style="background:#defbe6; border-left:3px solid #24a148; color:#0f5123; padding:8px 12px; border-radius:3px;">' +
+                    '<strong>✅ Adresse mise à jour avec succès dans le dossier OpenMRS !</strong><br/>' +
+                    '<span style="font-size:11px; color:#525252;">Nouvelle adresse : <strong>' + addr1 + (city ? ', ' + city : '') + '</strong></span>' +
+                    '</div>';
+                  statusMsg.style.display = 'block';
+                  confirmBtn.style.display = 'none';
+                } else if (action.action_type === 'record_clinical_note') {
+                  var providerUuid = await getCurrentProviderUuid();
+                  var encounterPayload = {
+                    encounterDatetime: new Date().toISOString(),
+                    patient: patientUuid,
+                    encounterType: action.parameters.encounter_type || ENCOUNTER_TYPES.CONSULTATION,
+                    location: action.parameters.location || ENCOUNTER_LOCATIONS.CONSULTATIONS,
+                    encounterProviders: providerUuid ? [{
+                      provider: providerUuid,
+                      encounterRole: CLINICIAN_ENCOUNTER_ROLE
+                    }] : [],
+                    obs: [
+                      {
+                        concept: CONCEPTS.ENCOUNTER_NOTE_TEXT,
+                        value: action.parameters.note || ''
+                      }
+                    ]
+                  };
+                  var enc = await apiSaveEncounter(encounterPayload);
+                  statusMsg.innerHTML = '<div style="background:#defbe6; border-left:3px solid #24a148; color:#0f5123; padding:8px 12px; border-radius:3px;">' +
+                    '<strong>✅ Note de consultation enregistrée dans OpenMRS !</strong><br/>' +
+                    '<span style="font-size:11px; color:#525252;">ID consultation : <code>' + enc.uuid + '</code></span>' +
+                    '</div>';
+                  statusMsg.style.display = 'block';
+                  confirmBtn.style.display = 'none';
+                } else if (action.action_type === 'add_clinical_diagnosis') {
+                  var providerUuidDiag = await getCurrentProviderUuid();
+                  var diagPayload = {
+                    encounterDatetime: new Date().toISOString(),
+                    patient: patientUuid,
+                    encounterType: ENCOUNTER_TYPES.CONSULTATION,
+                    location: ENCOUNTER_LOCATIONS.CONSULTATIONS,
+                    encounterProviders: providerUuidDiag ? [{
+                      provider: providerUuidDiag,
+                      encounterRole: CLINICIAN_ENCOUNTER_ROLE
+                    }] : [],
+                    obs: [
+                      {
+                        concept: CONCEPTS.ENCOUNTER_NOTE_TEXT,
+                        value: 'Diagnostic : ' + (action.parameters.diagnosis || '') + ' (Statut: ' + (action.parameters.status || 'Actif') + ')'
+                      }
+                    ]
+                  };
+                  var encDiag = await apiSaveEncounter(diagPayload);
+                  statusMsg.innerHTML = '<div style="background:#defbe6; border-left:3px solid #24a148; color:#0f5123; padding:8px 12px; border-radius:3px;">' +
+                    '<strong>✅ Diagnostic consigné dans le dossier OpenMRS !</strong><br/>' +
+                    '<span style="font-size:11px; color:#525252;">Diagnostic : <strong>' + (action.parameters.diagnosis || '') + '</strong> • ID: <code>' + encDiag.uuid + '</code></span>' +
+                    '</div>';
+                  statusMsg.style.display = 'block';
+                  confirmBtn.style.display = 'none';
+                }
+              } catch (err) {
+                statusMsg.innerHTML = '<div style="background:#fff1f1; border-left:3px solid #da1e28; color:#750e13; padding:8px 12px; border-radius:3px;">' +
+                  '<strong>❌ Erreur OpenMRS :</strong> ' + err.message +
+                  '</div>';
+                statusMsg.style.display = 'block';
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = '💾 Réessayer';
+                cancelBtn.style.display = 'inline-block';
+              }
+            });
+
+            cancelBtn.addEventListener('click', function () {
+              actionCard.innerHTML = '<div style="font-size:12px; color:#6f6f6f; font-style:italic; padding:4px 0;">✖ Action annulée par le médecin. Aucune modification effectuée.</div>';
+            });
+
+            buttonGroup.appendChild(confirmBtn);
+            buttonGroup.appendChild(cancelBtn);
+            actionCard.appendChild(actionHeader);
+            actionCard.appendChild(previewBox);
+            actionCard.appendChild(buttonGroup);
+            actionCard.appendChild(statusMsg);
+            msgDiv.appendChild(actionCard);
+          }
+
           chatContainer.appendChild(msgDiv);
           chatContainer.scrollTop = chatContainer.scrollHeight;
         }
@@ -1471,7 +1645,7 @@
             var res = await apiChatAssistant(conversationHistory, patientContext);
             var loader = dom.querySelector('#chat-loading-indicator');
             if (loader) loader.remove();
-            appendChatMessage('assistant', res.response);
+            appendChatMessage('assistant', res.response, res.action);
             conversationHistory.push({ role: 'assistant', content: res.response });
           } catch (err) {
             conversationHistory.pop();
